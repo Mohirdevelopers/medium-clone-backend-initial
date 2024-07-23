@@ -8,13 +8,14 @@ if [ "$DATABASE" = "postgres" ]; then
   echo "PostgreSQL started"
 fi
 
-echo "Waiting for Redis..."
-while ! nc -z $REDIS_HOST $REDIS_PORT; do
-  sleep 0.1
-done
-echo "Redis started"
+if [ -n "${REDIS_HOST}" ]; then
+  echo "Waiting for Redis..."
+  while ! nc -z $REDIS_HOST $REDIS_PORT; do
+    sleep 0.1
+  done
+  echo "Redis started"
+fi
 
-# sleep 100
 echo "Running migrations"
 python manage.py migrate
 echo "Successfully migrated database"
