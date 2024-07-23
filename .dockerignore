@@ -1,0 +1,10 @@
+.env
+staticfiles
+media
+__pycache__
+.idea
+.ruff_cache
+.pytest_cache
+.pre-commit-config.yaml
+.gitignore
+logs

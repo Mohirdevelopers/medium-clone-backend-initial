@@ -1,0 +1,52 @@
+version: "3.9"
+services:
+  medium_app:
+    container_name: medium_app
+    restart: always
+    volumes:
+      - .:/my_code
+      # - static_volume:/my_code/staticfiles
+    image: medium_app:latest
+    build: .
+    env_file:
+      - .env.example
+    ports:
+      - "8000:8000"
+    depends_on:
+      - medium_db
+      - medium_redis
+    networks:
+      medium_network:
+
+  medium_db:
+    container_name: medium_db
+    image: postgres:15-alpine
+    restart: always
+    env_file:
+      - .env.example
+    expose:
+      - "5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres-pass
+      - POSTGRES_DB=medium_db
+    networks:
+      - medium_network
+
+  medium_redis:
+    container_name: medium_redis
+    image: "redis:7-alpine"
+    env_file:
+      - .env.example
+    expose:
+      - "6379"
+    restart: always
+    networks:
+       - medium_network
+
+networks:
+  medium_network:
+    name: medium_network
+
+# volumes:
+#   static_volume:

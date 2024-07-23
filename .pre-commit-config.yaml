@@ -1,0 +1,52 @@
+default_language_version:
+  python: python3.11
+exclude: '(\.eggs|\.git|\.hg|\.mypy_cache|\.idea|.idea|\.pytest_cache|\.tox|\.venv|venv|.env|env|\.vscode|static|media/|.*/templates|.*/migrations)'
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trim Trailing Whitespace
+        description: This hook trims trailing whitespace.
+        entry: trailing-whitespace-fixer
+
+      - id: end-of-file-fixer
+        name: End Of File Fixer
+        description: Makes sure files end in a newline and only a newline.
+      - id: check-yaml
+        name: YAML Checker
+        description: Attempts to load all yaml files to verify syntax
+
+      - id: check-added-large-files
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.4
+    hooks:
+      - id: ruff
+        args: [ --fix, --exit-non-zero-on-fix, --unsafe-fixes ]
+        alias: autoformat
+#        args: [ --fix ]
+  - repo: local
+    hooks:
+      - id: migrations-check
+        language: system
+        name: Check for uncreated migrations.
+        entry: sh -c "./manage.py makemigrations --check --dry-run"
+        files: "models\\.py$"
+        stages: [ commit ]
+  - repo: local
+    hooks:
+      - id: runserver-check
+        language: system
+        name: Check for runserver.
+        entry: sh -c "./manage.py check"
+        stages: [ commit ]
+  # - repo: local
+  #   hooks:
+  #     - id: pytest-check
+  #       name: pytest-check
+  #       language: system
+  #       entry: bash -c "pytest -v"
+  #       pass_filenames: true
+  #       always_run: true
