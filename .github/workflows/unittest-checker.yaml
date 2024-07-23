@@ -9,7 +9,6 @@ on:
       github_feedback_id:
         description: 'Github feedback id'
         required: true
-#  push:
 
 jobs:
   deploy:
@@ -73,7 +72,6 @@ jobs:
       - name: Run Tests
         working-directory: forked-repo
         run: docker compose exec medium_app pytest ${{ github.event.inputs.tests_path }} --cache-clear -vv --json-report --json-report-file=./reports/unittest-checker-report.json --json-report-indent=2
-#        run: docker compose exec medium_app pytest tests/proyekt-maxfiy-malumotlarini-environmentda-saqlash  --cache-clear -vv --json-report --json-report-file=./reports/unittest-checker-report.json --json-report-indent=2
         continue-on-error: true
 
       - name: Upload artifact
