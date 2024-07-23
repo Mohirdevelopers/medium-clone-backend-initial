@@ -93,6 +93,7 @@ local_settings.py
 # ignore virtualenvs
 venv/
 env/
+.venv/
 
 # Custom
 .vscode/
@@ -109,3 +110,5 @@ reports
 tests/.pytest_cache
 .pytest_cache
 logs
+.idea
+.idea/
