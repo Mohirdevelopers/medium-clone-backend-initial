@@ -1,11 +1,13 @@
 asgiref==3.8.1
 Django==4.2.14
-gunicorn==22.0.0
-packaging==24.1
-sqlparse==0.5.1
 factory-boy==3.3.0
 Faker==25.9.2
 fakeredis==2.23.3
+gunicorn==22.0.0
+inflection==0.5.1
+iniconfig==2.0.0
+packaging==24.1
+pluggy==1.5.0
 pytest==8.2.1
 pytest-django==4.8.0
 pytest-factoryboy==2.7.0
@@ -13,4 +15,9 @@ pytest-json-report==1.5.0
 pytest-metadata==3.1.1
 pytest-mock==3.14.0
 pytest-order==1.2.1
+python-dateutil==2.9.0.post0
 redis==5.0.7
+six==1.16.0
+sortedcontainers==2.4.0
+sqlparse==0.5.1
+typing_extensions==4.12.2
