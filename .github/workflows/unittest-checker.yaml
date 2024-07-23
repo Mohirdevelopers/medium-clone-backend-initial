@@ -9,8 +9,6 @@ on:
       github_feedback_id:
         description: 'Github feedback id'
         required: true
-  push:
-    branches: [ "main" ]
 
 jobs:
   deploy:
