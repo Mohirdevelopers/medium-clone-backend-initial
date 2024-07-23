@@ -9,6 +9,7 @@ on:
       github_feedback_id:
         description: 'Github feedback id'
         required: true
+#  push:
 
 jobs:
   deploy:
@@ -17,6 +18,11 @@ jobs:
     timeout-minutes: 20
 
     steps:
+      - name: Clean environment
+        run: |
+          rm -rf original-repo
+          rm -rf forked-repo
+
       - name: Send a signal to the webhook that the job has started.
         run: |
           curl -X PUT --location 'https://api-dev.mohirpool.uz/api/site/accelerators/code-reviews/github-feedbacks/${{ github.event.inputs.github_feedback_id }}/' \
@@ -31,12 +37,14 @@ jobs:
           repository: sirojiddinyakubov/medium-clone-backend
           path: original-repo
           ref: main
+          fetch-depth: 0
 
       - name: Checkout forked repository
         uses: actions/checkout@v3
         with:
           path: forked-repo
           ref: main
+          fetch-depth: 0
 
       - name: Move tests folder from original to forked
         run: |
@@ -65,6 +73,7 @@ jobs:
       - name: Run Tests
         working-directory: forked-repo
         run: docker compose exec medium_app pytest ${{ github.event.inputs.tests_path }} --cache-clear -vv --json-report --json-report-file=./reports/unittest-checker-report.json --json-report-indent=2
+#        run: docker compose exec medium_app pytest tests/proyekt-maxfiy-malumotlarini-environmentda-saqlash  --cache-clear -vv --json-report --json-report-file=./reports/unittest-checker-report.json --json-report-indent=2
         continue-on-error: true
 
       - name: Upload artifact
