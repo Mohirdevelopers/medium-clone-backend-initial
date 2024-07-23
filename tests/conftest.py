@@ -15,7 +15,7 @@ try:
         ArticleFactory, TopicFactory, CommentFactory,
         FavoriteFactory, ClapFactory, ReadingHistoryFactory,
         FollowFactory, PinFactory, NotificationFactory, FAQFactory)
-except:
+except Exception:
     pass
 from tests.factories.user_factory import UserFactory
 
@@ -31,7 +31,7 @@ try:
     register(PinFactory)
     register(NotificationFactory)
     register(FAQFactory)
-except:
+except Exception:
     pass
 
 
@@ -59,17 +59,3 @@ def tokens():
 @pytest.fixture
 def fake_redis():
     return fakeredis.FakeRedis()
-
-
-
-# def pytest_itemcollected(item):
-#     # Custom test names
-#     custom_names = {
-#         'test_users_app_exists': 'Check if users app exists',
-#         'test_users_viewset': 'Verify users viewset functionality',
-#         'test_create_user': 'Ensure user creation works'
-#     }
-#
-#     # Change the name of the test if it exists in the custom names dictionary
-#     if item.originalname in custom_names:
-#         item._nodeid = custom_names[item.originalname]
