@@ -63,6 +63,7 @@ def test_retrieve_notification(single_notification, api_client, tokens):
     assert response.status_code == status.HTTP_200_OK
     assert response.data['id'] == notification.id
 
+
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     'single_notification',

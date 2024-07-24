@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 @pytest.fixture()
 def clap_data(request, user_factory, article_factory, clap_factory):
     """

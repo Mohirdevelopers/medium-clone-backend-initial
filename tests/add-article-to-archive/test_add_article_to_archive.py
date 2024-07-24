@@ -1,6 +1,7 @@
 import pytest
 from rest_framework import status
 
+
 @pytest.fixture
 def article_data(article_factory, user_factory):
     """

@@ -5,6 +5,7 @@ from articles.models import Article, ReadingHistory
 
 User = get_user_model()
 
+
 @pytest.fixture()
 def article_data(request, user_factory, article_factory):
     """
@@ -14,6 +15,7 @@ def article_data(request, user_factory, article_factory):
     article = article_factory.create()
 
     return article.id, user
+
 
 @pytest.mark.django_db
 def test_view_article(article_data, api_client, tokens):
@@ -64,6 +66,7 @@ def test_increment_reads_count(article_data, api_client, tokens):
     assert response.status_code == status.HTTP_200_OK
     article.refresh_from_db()
     assert article.reads_count == initial_reads_count + 2
+
 
 @pytest.mark.django_db
 def test_increment_reads_count_article_not_found(article_data, api_client, tokens):

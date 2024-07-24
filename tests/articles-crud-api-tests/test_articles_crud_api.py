@@ -240,7 +240,7 @@ def test_article_create(test_article_create_data, api_client, tokens):
     client = api_client(token=access)
 
     data = {
-        "title":data.get('title'),
+        "title": data.get('title'),
         "summary": data.get('summary'),
         "content": data.get('content'),
         "topic_ids": data.get('topics')

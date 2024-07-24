@@ -5,7 +5,6 @@ from faker import Faker
 import factory
 from .user_factory import UserFactory
 
-
 fake = Faker()
 
 

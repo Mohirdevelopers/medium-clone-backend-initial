@@ -1,6 +1,7 @@
 import pytest
 import fakeredis
 from pytest_factoryboy import register
+
 try:
     from rest_framework.test import APIClient
 except ImportError:

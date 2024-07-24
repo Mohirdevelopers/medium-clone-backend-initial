@@ -36,7 +36,7 @@ Bu Django loyihasi Docker va lokalni uchun sozlangan. Ushbu qo'llanma sizga loka
     ```
     pre-commit install
     ```
-    
+
 ### Django-ni Lokalda Ishga Tushurish
 
 Agar Django-ni Docker orqali emas, balki lokalda ishga tushirmoqchi bo'lsangiz, quyidagi amallarni bajaring:
@@ -79,7 +79,7 @@ Agar Django-ni Docker orqali emas, balki lokalda ishga tushirmoqchi bo'lsangiz, 
     ```bash
     python manage.py createsuperuser
     ```
-    
+
 ### Docker Compose-ni Ishga Tushurish
 
 1. Kompyuteringizda Docker va Docker Compose o'rnatilganligini tekshiring.

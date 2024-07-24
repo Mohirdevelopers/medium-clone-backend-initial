@@ -1,9 +1,11 @@
 import importlib.util
 import pytest
 
+
 def test_via_importlib():
     loader = importlib.util.find_spec('loguru')
     assert loader is not None, "loguru is not installed"
+
 
 @pytest.mark.order(1)
 @pytest.mark.django_db

@@ -47,8 +47,10 @@ def test_popular_authors_list(popular_authors_data, api_client, tokens):
         current_user = next((user for user in sorted_users if user.id == data['results'][i]['id']), None)
         next_user = next((user for user in sorted_users if user.id == data['results'][i + 1]['id']), None)
 
-        current_total_reads = sum(article.reads_count for article in current_user.article_set.filter(status=ArticleStatus.PUBLISH)) if current_user else 0
-        next_total_reads = sum(article.reads_count for article in next_user.article_set.filter(status=ArticleStatus.PUBLISH)) if next_user else 0
+        current_total_reads = sum(article.reads_count for article in
+                                  current_user.article_set.filter(status=ArticleStatus.PUBLISH)) if current_user else 0
+        next_total_reads = sum(article.reads_count for article in
+                               next_user.article_set.filter(status=ArticleStatus.PUBLISH)) if next_user else 0
 
         assert current_total_reads >= next_total_reads
 

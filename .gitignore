@@ -111,4 +111,4 @@ tests/.pytest_cache
 .pytest_cache
 logs
 .idea
-.idea/
+.venv

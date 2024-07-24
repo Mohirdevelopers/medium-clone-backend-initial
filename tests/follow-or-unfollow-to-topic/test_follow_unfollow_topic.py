@@ -39,6 +39,7 @@ def follow_to_topic_data(request, topic_factory, user_factory):
 
     return data[request.param]()
 
+
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     'follow_to_topic_data',
@@ -96,6 +97,7 @@ def unfollow_to_topic_data(request, topic_factory, user_factory):
     }
 
     return data[request.param]()
+
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(

@@ -5,7 +5,6 @@ from rest_framework import status
 User = get_user_model()
 
 
-
 @pytest.fixture
 def change_password_data(request, user_factory, tokens):
     old_password = 'strong_password_123'

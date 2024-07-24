@@ -2,9 +2,11 @@ import importlib.util
 import pytest
 from django.conf import settings
 
+
 def test_via_importlib():
     loader = importlib.util.find_spec('rest_framework')
     assert loader is not None, "djangorestframework is not installed"
+
 
 @pytest.mark.order(1)
 @pytest.mark.django_db

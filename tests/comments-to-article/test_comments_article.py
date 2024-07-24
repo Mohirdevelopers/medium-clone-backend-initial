@@ -75,6 +75,7 @@ def create_comments_data(request, user_factory, article_factory):
 
     return data[request.param]()
 
+
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "create_comments_data",
@@ -230,6 +231,7 @@ def update_comment_data(request, user_factory, article_factory, comment_factory)
     }
 
     return data[request.param]()
+
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(

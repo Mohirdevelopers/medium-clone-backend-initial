@@ -65,7 +65,8 @@ def test_custom_user_admin():
 
     fieldset_fields = frozenset(field for fieldset in CustomUserAdmin.fieldsets for field in fieldset[1]['fields'])
     expected_fields = frozenset(['middle_name'])
-    assert fieldset_fields.intersection(expected_fields) == expected_fields, f"{model_name} model fields {expected_fields} not in fieldset"
+    assert fieldset_fields.intersection(
+        expected_fields) == expected_fields, f"{model_name} model fields {expected_fields} not in fieldset"
 
     assert CustomUserAdmin.list_display == (
         'id', 'username', 'email', 'first_name', 'last_name', 'middle_name'), f"{model_name} model list_display not set"

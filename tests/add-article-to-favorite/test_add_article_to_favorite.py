@@ -4,6 +4,7 @@ from rest_framework import status
 
 User = get_user_model()
 
+
 @pytest.fixture
 def favorite_article_data(request, user_factory, article_factory):
     """
@@ -59,7 +60,6 @@ def test_add_article_to_favorites(api_client, tokens, favorite_article_data):
         assert response.data['detail'] == "Maqola sevimlilarga qo'shildi."
     elif status_code == status.HTTP_400_BAD_REQUEST:
         assert response.data['detail'] == "Maqola sevimlilarga allaqachon qo'shilgan."
-
 
 
 @pytest.fixture
@@ -131,6 +131,7 @@ def retrieve_user_favorites_data(request, user_factory, article_factory, favorit
     }
 
     return data[request.param]()
+
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(

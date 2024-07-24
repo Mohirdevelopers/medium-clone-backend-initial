@@ -6,6 +6,7 @@ from faker import Faker
 fake = Faker()
 User = get_user_model()
 
+
 @pytest.fixture
 def search_by_article_topic_data(user_factory, topic_factory, article_factory):
     """
@@ -19,6 +20,7 @@ def search_by_article_topic_data(user_factory, topic_factory, article_factory):
         article.topics.add(topic)
 
     return user, {"search": topic.name}
+
 
 @pytest.fixture
 def search_by_article_title_data(user_factory, topic_factory, article_factory):
@@ -81,7 +83,6 @@ def search_by_article_non_existent_data(user_factory, topic_factory, article_fac
         article.topics.add(topic)
 
     return user, {"search": "non_existent_term"}
-
 
 
 @pytest.fixture()
