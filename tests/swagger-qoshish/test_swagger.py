@@ -6,7 +6,17 @@ from rest_framework import status
 
 @pytest.mark.order(1)
 @pytest.mark.django_db
-def test_swagger_schema(api_client):
+def test_swagger_schema(api_client, user_factory):
+
+    username = 'test'
+    password = 'random_password'
+    user = user_factory.create(username=username, password=password)
+
+    data = {
+        'username': user.username,
+        'password': password,
+    }
+
     assert 'drf_spectacular' in settings.INSTALLED_APPS, "drf_spectacular package is not installed"
     assert 'DEFAULT_SCHEMA_CLASS' in settings.REST_FRAMEWORK, "DEFAULT_SCHEMA_CLASS package is not installed"
     assert hasattr(settings, 'SPECTACULAR_SETTINGS'), "SPECTACULAR_SETTINGS not found in settings"
@@ -20,8 +30,16 @@ def test_swagger_schema(api_client):
     assert redoc_path == '/redoc/', "Redoc path is not configured correctly"
 
     response = api_client().get(swagger_path)
+    assert response.status_code == status.HTTP_302_FOUND, "Swagger is not protected"
+
+    resp = api_client().post('/users/login/', data=data)
+    resp_json = resp.json()
+    client = api_client(token=resp_json['access'])
+
+    response = client().get(swagger_path)
     assert response.status_code == status.HTTP_200_OK, f"Failed to fetch Swagger UI, received status code {response.status_code}"
     assert 'text/html' in response['Content-Type'], f"Expected HTML content, received {response['Content-Type']}"
+
 
     response = api_client().get(redoc_path)
     assert response.status_code == status.HTTP_200_OK, f"Failed to fetch Redoc, received status code {response.status_code}"
@@ -29,5 +47,4 @@ def test_swagger_schema(api_client):
 
     response = api_client().get(schema_path)
     assert response.status_code == status.HTTP_200_OK, f"Failed to fetch Schema, received status code {response.status_code}"
-    assert 'application/vnd.oai.openapi' in response[
-        'Content-Type'], f"Expected vnd.oai.openapi content, received {response['Content-Type']}"
+    assert 'application/vnd.oai.openapi' in response['Content-Type'], f"Expected vnd.oai.openapi content, received {response['Content-Type']}"
