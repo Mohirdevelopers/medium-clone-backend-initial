@@ -1,6 +1,11 @@
 import pytest
-import importlib.util
 from django.conf import settings
+import importlib.util
+
+
+def test_via_importlib():
+    loader = importlib.util.find_spec('django_resized')
+    assert loader is not None, "django-resized is not installed"
 
 
 @pytest.mark.order(1)
@@ -13,6 +18,3 @@ def test_django_resized():
         "JPEG": ".jpg"}, "DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS is not set correctly"
     assert settings.DJANGORESIZED_DEFAULT_KEEP_META, "DJANGORESIZED_DEFAULT_KEEP_META is not set correctly"
     assert settings.DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION, "DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION is not set correctly"
-
-    loader = importlib.util.find_spec('django_resized')
-    assert loader is not None, "django_resized is not installed"
