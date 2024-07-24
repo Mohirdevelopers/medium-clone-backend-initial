@@ -1,4 +1,5 @@
 import pytest
+import importlib.util
 from django.conf import settings
 
 
@@ -13,7 +14,5 @@ def test_django_resized():
     assert settings.DJANGORESIZED_DEFAULT_KEEP_META, "DJANGORESIZED_DEFAULT_KEEP_META is not set correctly"
     assert settings.DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION, "DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION is not set correctly"
 
-    try:
-        import django_resized  # noqa
-    except ImportError:
-        assert False, "django_resized is not installed"
+    loader = importlib.util.find_spec('django_resized')
+    assert loader is not None, "django_resized is not installed"
