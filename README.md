@@ -57,7 +57,7 @@ Agar Django-ni Docker orqali emas, balki lokalda ishga tushirmoqchi bo'lsangiz, 
 
     Vitural muhitni aktivlashtirish (Windows)
     ```
-    ./venv/Scripts/activate
+    .\venv\Scripts\activate
     ```
 
 1. Loyihaning kutubxonalarini o'rnatish:
