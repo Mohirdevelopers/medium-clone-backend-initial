@@ -21,11 +21,20 @@ Bu Django loyihasi Docker va lokalni uchun sozlangan. Ushbu qo'llanma sizga loka
     ```env
     SECRET_KEY=g7df7fg8hgfdg9fdg8d7fg567sd5f098dfg7df
     DEBUG=True
-    DATABASE=postgres
-    DB_HOST=medium_db
-    DB_PORT=5432
-    REDIS_HOST=medium_redis
-    REDIS_PORT=6379
+    DB_ENGINE=django.db.backends.sqlite3
+    DB_NAME=db.sqlite3
+    DB_USER=
+    DB_PASSWORD=
+    DB_HOST=
+    DB_PORT=
+    ```
+ 3. Pre commit hookni o'rnatish (Ixtiyoriy)
+
+    Siz pre-commit hookni o'rnatish orqali kodlaringizni git orqali kommit qilishdan oldin bir nechta avtomatik tekshiruvlardan o'tkazishingiz mumkin. Masalan: migratsiyalarni tekshirish, kodlardagi xatoliklarni aniqlash, kodlarni qayta formatlash va hokazo. Ushbu tekshiruvlarni bajarish buyruqlar .pre-commit-config.yaml faylida yozilgan.
+
+    Pre-commit hookni o'rnatish buyurug'i:
+    ```
+    pre-commit install
     ```
 
 ### Docker Compose-ni Ishga Tushurish
@@ -63,7 +72,7 @@ Agar Django-ni Docker orqali emas, balki lokalda ishga tushirmoqchi bo'lsangiz, 
     source venv/bin/activate  # Windows uchun `venv\Scripts\activate` foydalaning
     ```
 
-2. Loyihaning bog'liqliklarini o'rnatish:
+2. Loyihaning kutubxonalarini o'rnatish:
 
     ```bash
     pip install -r requirements.txt
