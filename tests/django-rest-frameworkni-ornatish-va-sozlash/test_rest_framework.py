@@ -8,6 +8,6 @@ def test_via_importlib():
 
 @pytest.mark.order(1)
 @pytest.mark.django_db
-def test_swagger_schema(api_client):
+def test_rest_framework(api_client):
     assert 'rest_framework' in settings.INSTALLED_APPS, "rest_framework package is not installed"
-    assert 'DEFAULT_AUTHENTICATION_CLASSES' in settings.REST_FRAMEWORK, "DEFAULT_AUTHENTICATION_CLASSES not in REST_FRAMEWORK"
+    assert 'DEFAULT_PERMISSION_CLASSES' in settings.REST_FRAMEWORK.keys(), "DEFAULT_PERMISSION_CLASSES not in REST_FRAMEWORK"
