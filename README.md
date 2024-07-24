@@ -36,7 +36,50 @@ Bu Django loyihasi Docker va lokalni uchun sozlangan. Ushbu qo'llanma sizga loka
     ```
     pre-commit install
     ```
+    
+### Django-ni Lokalda Ishga Tushurish
 
+Agar Django-ni Docker orqali emas, balki lokalda ishga tushirmoqchi bo'lsangiz, quyidagi amallarni bajaring:
+
+1. Virtual muhit yaratish va faollashtirish:
+
+    Virtual muhitni yaratish:
+    ```bash
+    python -m venv venv
+    ```
+
+    Vitural muhitni aktivlashtirish (Linux, MacOs)
+    ```
+    source venv/bin/activate
+    # or
+    . ./venv/bin/activate
+    ```
+
+    Vitural muhitni aktivlashtirish (Windows)
+    ```
+    ./venv/Scripts/activate
+    ```
+
+1. Loyihaning kutubxonalarini o'rnatish:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+2. Migratsiyalarni qo'llash:
+
+    ```bash
+    python manage.py migrate
+    # or
+    ./manage.py migrate
+    ```
+
+3. Superuser yaratish (agar kerak bo'lsa):
+
+    ```bash
+    python manage.py createsuperuser
+    ```
+    
 ### Docker Compose-ni Ishga Tushurish
 
 1. Kompyuteringizda Docker va Docker Compose o'rnatilganligini tekshiring.
@@ -47,7 +90,7 @@ Bu Django loyihasi Docker va lokalni uchun sozlangan. Ushbu qo'llanma sizga loka
     docker-compose up --build
     ```
 
-   Bu buyruq sizning `docker-compose.yml` faylingizda belgilangan konteynerlarni quradi va ishga tushiradi.
+   Bu buyruq sizning `docker-compose.yml` faylingizda belgilangan konteynerlarni build qiladi va ishga tushiradi.
 
 3. Konteynerlarni fon rejimida (background) ishga tushurish uchun:
 
@@ -61,36 +104,7 @@ Bu Django loyihasi Docker va lokalni uchun sozlangan. Ushbu qo'llanma sizga loka
     docker-compose down
     ```
 
-### Django-ni Lokalda Ishga Tushurish
-
-Agar Django-ni Docker orqali emas, balki lokalda ishga tushirmoqchi bo'lsangiz, quyidagi amallarni bajaring:
-
-1. Virtual muhit yaratish va faollashtirish:
-
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # Windows uchun `venv\Scripts\activate` foydalaning
-    ```
-
-2. Loyihaning kutubxonalarini o'rnatish:
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-3. Migratsiyalarni qo'llash:
-
-    ```bash
-    python manage.py migrate
-    ```
-
-4. Superuser yaratish (agar kerak bo'lsa):
-
-    ```bash
-    python manage.py createsuperuser
-    ```
-
-5. Django rivojlantirish serverini ishga tushurish:
+5. Django serverini ishga tushurish:
 
     ```bash
     python manage.py runserver
