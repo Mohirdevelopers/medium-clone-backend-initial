@@ -6,12 +6,13 @@ from django.conf import settings
 
 User = get_user_model()
 
+@pytest.mark.order(1)
 def test_modeltranslation_installed():
     loader = importlib.util.find_spec('modeltranslation')
     assert loader is not None, "modeltranslation package is not installed"
 
 
-
+@pytest.mark.order(2)
 @pytest.mark.django_db
 def test_modeltranslation_is_setup_correctly(user_factory):
     from modeltranslation.translator import translator
