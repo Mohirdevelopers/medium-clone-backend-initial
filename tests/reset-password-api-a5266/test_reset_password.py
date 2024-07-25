@@ -143,7 +143,7 @@ def forgot_password_verify_data(request, user_factory, mocker):
 
     def invalid_email():
         return (
-            404, user, otp_secret, None,
+            400, user, otp_secret, None,
             {
                 'email': 'fake_email',
                 'otp_code': otp_code,
@@ -152,7 +152,7 @@ def forgot_password_verify_data(request, user_factory, mocker):
 
     def empty_email():
         return (
-            404, user, otp_secret, None,
+            400, user, otp_secret, None,
             {
                 'email': '',
                 'otp_code': otp_code,
