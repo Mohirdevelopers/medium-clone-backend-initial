@@ -1,50 +1,71 @@
 import pytest
 from django.conf import settings
 from django.urls import reverse
+from django.contrib.auth import get_user_model
 from rest_framework import status
 
 
 @pytest.mark.order(1)
 @pytest.mark.django_db
-def test_swagger_schema(api_client, user_factory):
-
-    username = 'test'
-    password = 'random_password'
-    user = user_factory.create(username=username, password=password)
-
-    data = {
-        'username': user.username,
-        'password': password,
-    }
-
-    assert 'drf_spectacular' in settings.INSTALLED_APPS, "drf_spectacular package is not installed"
-    assert 'DEFAULT_SCHEMA_CLASS' in settings.REST_FRAMEWORK, "DEFAULT_SCHEMA_CLASS package is not installed"
-    assert hasattr(settings, 'SPECTACULAR_SETTINGS'), "SPECTACULAR_SETTINGS not found in settings"
-
+def test_swagger_urls_set_correctly():
     schema_path = reverse('schema')
     swagger_path = reverse('swagger-ui')
     redoc_path = reverse('redoc')
+
 
     assert schema_path == '/schema/', "Schema path is not configured correctly"
     assert swagger_path == '/swagger/', "Swagger path is not configured correctly"
     assert redoc_path == '/redoc/', "Redoc path is not configured correctly"
 
-    response = api_client().get(swagger_path)
+
+
+@pytest.mark.order(2)
+@pytest.mark.django_db
+def test_swagger_schema_protected(client, user_factory):
+    username = 'test'
+    password = 'random_password'
+    user = user_factory.create(username=username)
+    user.set_password(password)
+    user.save()
+
+    swagger_path = reverse('swagger-ui')
+
+    response = client.get(swagger_path)
     assert response.status_code == status.HTTP_302_FOUND, "Swagger is not protected"
 
-    resp = api_client().post('/users/login/', data=data)
-    resp_json = resp.json()
-    client = api_client(token=resp_json['access'])
 
-    response = client().get(swagger_path)
+@pytest.mark.order(3)
+@pytest.mark.django_db
+def test_swagger_schema(client, user_factory):
+    get_user_model()
+    username = 'test'
+    password = 'random_password'
+    user = user_factory.create(username=username)
+    user.set_password(password)
+    user.save()
+
+    schema_path = reverse('schema')
+    swagger_path = reverse('swagger-ui')
+    redoc_path = reverse('redoc')
+
+    client.login(username=username, password=password)
+
+    assert 'drf_spectacular' in settings.INSTALLED_APPS, "drf_spectacular package is not installed"
+    assert 'DEFAULT_SCHEMA_CLASS' in settings.REST_FRAMEWORK, "DEFAULT_SCHEMA_CLASS package is not installed"
+    assert hasattr(settings, 'SPECTACULAR_SETTINGS'), "SPECTACULAR_SETTINGS not found in settings"
+
+    assert schema_path == '/schema/', "Schema path is not configured correctly"
+    assert swagger_path == '/swagger/', "Swagger path is not configured correctly"
+    assert redoc_path == '/redoc/', "Redoc path is not configured correctly"
+
+    response = client.get(swagger_path)
     assert response.status_code == status.HTTP_200_OK, f"Failed to fetch Swagger UI, received status code {response.status_code}"
     assert 'text/html' in response['Content-Type'], f"Expected HTML content, received {response['Content-Type']}"
 
-
-    response = api_client().get(redoc_path)
+    response = client.get(redoc_path)
     assert response.status_code == status.HTTP_200_OK, f"Failed to fetch Redoc, received status code {response.status_code}"
     assert 'text/html' in response['Content-Type'], f"Expected HTML content, received {response['Content-Type']}"
 
-    response = api_client().get(schema_path)
+    response = client.get(schema_path)
     assert response.status_code == status.HTTP_200_OK, f"Failed to fetch Schema, received status code {response.status_code}"
     assert 'application/vnd.oai.openapi' in response['Content-Type'], f"Expected vnd.oai.openapi content, received {response['Content-Type']}"
