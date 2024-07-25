@@ -8,7 +8,22 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+@pytest.mark.order(1)
+def test_birth_years_set_settings():
+    assert hasattr(settings, 'BIRTH_YEAR_MIN'), "BIRTH_YEAR_MIN setting is missing"
+    assert hasattr(settings, 'BIRTH_YEAR_MAX'), "BIRTH_YEAR_MAX setting is missing"
 
+
+@pytest.mark.order(2)
+def test_errors_file_exist_errors_msg():
+    try:
+        from users import errors
+        assert hasattr(errors, 'BIRTH_YEAR_ERROR_MSG'), "BIRTH_YEAR_ERROR_MSG is missing in errors module"
+    except ImportError:
+        pytest.fail("errors module is missing or not correctly imported")
+
+
+@pytest.mark.order(3)
 @pytest.mark.django_db
 def test_custom_user_meta_class():
     meta = User._meta
@@ -34,25 +49,7 @@ def test_custom_user_meta_class():
     assert expected_constraints.issubset(constraint_names)
 
 
-VALID_BIRTH_YEAR = (settings.BIRTH_YEAR_MIN + settings.BIRTH_YEAR_MAX) // 2
-INVALID_BIRTH_YEAR_LOW = settings.BIRTH_YEAR_MIN - 1
-INVALID_BIRTH_YEAR_HIGH = settings.BIRTH_YEAR_MAX + 1
-
-
-@pytest.mark.parametrize("birth_year, is_valid", [
-    (VALID_BIRTH_YEAR, True),
-    (INVALID_BIRTH_YEAR_LOW, False),
-    (INVALID_BIRTH_YEAR_HIGH, False)
-])
-def test_validate_birth_year(birth_year, is_valid):
-    serializer = UserUpdateSerializer(data={'birth_year': birth_year})
-    if is_valid:
-        assert serializer.is_valid()
-    else:
-        with pytest.raises(serializers.ValidationError):
-            serializer.is_valid(raise_exception=True)
-
-
+@pytest.mark.order(4)
 def test_validate_method():
     valid_data = {'birth_year': VALID_BIRTH_YEAR}
     serializer = UserUpdateSerializer(data=valid_data)
@@ -69,3 +66,24 @@ def test_validate_method():
     with pytest.raises(serializers.ValidationError) as excinfo:
         serializer.is_valid(raise_exception=True)
     assert 'birth_year' in excinfo.value.detail
+
+
+
+VALID_BIRTH_YEAR = (settings.BIRTH_YEAR_MIN + settings.BIRTH_YEAR_MAX) // 2
+INVALID_BIRTH_YEAR_LOW = settings.BIRTH_YEAR_MIN - 1
+INVALID_BIRTH_YEAR_HIGH = settings.BIRTH_YEAR_MAX + 1
+
+
+@pytest.mark.order(5)
+@pytest.mark.parametrize("birth_year, is_valid", [
+    (VALID_BIRTH_YEAR, True),
+    (INVALID_BIRTH_YEAR_LOW, False),
+    (INVALID_BIRTH_YEAR_HIGH, False)
+])
+def test_validate_birth_year(birth_year, is_valid):
+    serializer = UserUpdateSerializer(data={'birth_year': birth_year})
+    if is_valid:
+        assert serializer.is_valid()
+    else:
+        with pytest.raises(serializers.ValidationError):
+            serializer.is_valid(raise_exception=True)

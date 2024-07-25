@@ -1,11 +1,17 @@
 import pytest
+import importlib.util
 from django.conf import settings
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from rest_framework import status
 
-
 @pytest.mark.order(1)
+def test_via_importlib():
+    loader = importlib.util.find_spec('drf_spectacular')
+    assert loader is not None, "drf_spectacular is not installed"
+
+
+@pytest.mark.order(2)
 @pytest.mark.django_db
 def test_swagger_urls_set_correctly():
     schema_path = reverse('schema')
@@ -19,7 +25,7 @@ def test_swagger_urls_set_correctly():
 
 
 
-@pytest.mark.order(2)
+@pytest.mark.order(3)
 @pytest.mark.django_db
 def test_swagger_schema_protected(client, user_factory):
     username = 'test'
@@ -34,7 +40,7 @@ def test_swagger_schema_protected(client, user_factory):
     assert response.status_code == status.HTTP_302_FOUND, "Swagger is not protected"
 
 
-@pytest.mark.order(3)
+@pytest.mark.order(4)
 @pytest.mark.django_db
 def test_swagger_schema(client, user_factory):
     get_user_model()
