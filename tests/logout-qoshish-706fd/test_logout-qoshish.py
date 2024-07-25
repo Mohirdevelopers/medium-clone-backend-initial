@@ -1,8 +1,13 @@
 import pytest
 from django.contrib.auth import get_user_model
-from users.enums import TokenType
+from enum import Enum
 
 User = get_user_model()
+
+
+class TokenType(str, Enum):
+    ACCESS = "access"
+    REFRESH = "refresh"
 
 
 @pytest.fixture
