@@ -13,7 +13,7 @@ def test_custom_logging_exists():
     try:
         from core.custom_logging import InterceptHandler  # noqa
     except ImportError:
-        assert False, "custom_logging folder missing"
+        assert False, "custom_logging file missing"
 
 
 @pytest.mark.order(1)
