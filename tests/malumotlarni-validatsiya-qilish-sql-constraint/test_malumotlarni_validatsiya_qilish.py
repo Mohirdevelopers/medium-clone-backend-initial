@@ -5,10 +5,13 @@ from rest_framework import serializers
 from users.serializers import UserUpdateSerializer
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from datetime import datetime
 
 User = get_user_model()
 
+
 @pytest.mark.order(1)
+@pytest.mark.django_db
 def test_birth_years_set_settings():
     assert hasattr(settings, 'BIRTH_YEAR_MIN'), "BIRTH_YEAR_MIN setting is missing"
     assert hasattr(settings, 'BIRTH_YEAR_MAX'), "BIRTH_YEAR_MAX setting is missing"
@@ -26,6 +29,13 @@ def test_errors_file_exist_errors_msg():
 @pytest.mark.order(3)
 @pytest.mark.django_db
 def test_custom_user_meta_class():
+    assert hasattr(settings, 'BIRTH_YEAR_MIN'), "BIRTH_YEAR_MIN setting is missing"
+    assert hasattr(settings, 'BIRTH_YEAR_MAX'), "BIRTH_YEAR_MAX setting is missing"
+
+    VALID_BIRTH_YEAR = (settings.BIRTH_YEAR_MIN + settings.BIRTH_YEAR_MAX) // 2
+    settings.BIRTH_YEAR_MIN - 1
+    settings.BIRTH_YEAR_MAX + 1
+
     meta = User._meta
 
     birth_year_field = meta.get_field('birth_year')
@@ -41,7 +51,7 @@ def test_custom_user_meta_class():
     with pytest.raises(ValidationError):
         user.clean()
 
-    user = User(birth_year=(settings.BIRTH_YEAR_MIN + settings.BIRTH_YEAR_MAX) // 2)
+    user = User(birth_year=VALID_BIRTH_YEAR)
     user.clean()
 
     constraint_names = {constraint.name for constraint in meta.constraints}
@@ -51,6 +61,9 @@ def test_custom_user_meta_class():
 
 @pytest.mark.order(4)
 def test_validate_method():
+    assert hasattr(settings, 'BIRTH_YEAR_MIN'), "BIRTH_YEAR_MIN setting is missing"
+    assert hasattr(settings, 'BIRTH_YEAR_MAX'), "BIRTH_YEAR_MAX setting is missing"
+
     VALID_BIRTH_YEAR = (settings.BIRTH_YEAR_MIN + settings.BIRTH_YEAR_MAX) // 2
     INVALID_BIRTH_YEAR_LOW = settings.BIRTH_YEAR_MIN - 1
     INVALID_BIRTH_YEAR_HIGH = settings.BIRTH_YEAR_MAX + 1
@@ -72,20 +85,12 @@ def test_validate_method():
     assert 'birth_year' in excinfo.value.detail
 
 
-def validate_birth_year_data():
-    VALID_BIRTH_YEAR = (settings.BIRTH_YEAR_MIN + settings.BIRTH_YEAR_MAX) // 2
-    INVALID_BIRTH_YEAR_LOW = settings.BIRTH_YEAR_MIN - 1
-    INVALID_BIRTH_YEAR_HIGH = settings.BIRTH_YEAR_MAX + 1
-    return [
-        (VALID_BIRTH_YEAR, True),
-        (INVALID_BIRTH_YEAR_LOW, False),
-        (INVALID_BIRTH_YEAR_HIGH, False),
-    ]
-
-
-
 @pytest.mark.order(5)
-@pytest.mark.parametrize("birth_year, is_valid", validate_birth_year_data())
+@pytest.mark.parametrize("birth_year, is_valid", [
+    ((1900 + datetime.now().year) // 2, True),
+    (1900 - 1, False),
+    (datetime.now().year + 1, False),
+])
 def test_validate_birth_year(birth_year, is_valid):
     serializer = UserUpdateSerializer(data={'birth_year': birth_year})
     if is_valid:
