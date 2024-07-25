@@ -1,14 +1,21 @@
 import pytest
+import importlib.util
 from django.contrib.auth import get_user_model
 from django.utils import translation
 from django.conf import settings
-from modeltranslation.translator import translator
 
 User = get_user_model()
+
+def test_modeltranslation_installed():
+    loader = importlib.util.find_spec('modeltranslation')
+    assert loader is not None, "modeltranslation package is not installed"
+
 
 
 @pytest.mark.django_db
 def test_modeltranslation_is_setup_correctly(user_factory):
+    from modeltranslation.translator import translator
+
     assert translator.get_options_for_model(User) is not None
 
     instance = user_factory.create(first_name="Test")
