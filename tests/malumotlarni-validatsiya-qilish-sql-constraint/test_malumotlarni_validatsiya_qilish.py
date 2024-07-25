@@ -51,6 +51,10 @@ def test_custom_user_meta_class():
 
 @pytest.mark.order(4)
 def test_validate_method():
+    VALID_BIRTH_YEAR = (settings.BIRTH_YEAR_MIN + settings.BIRTH_YEAR_MAX) // 2
+    INVALID_BIRTH_YEAR_LOW = settings.BIRTH_YEAR_MIN - 1
+    INVALID_BIRTH_YEAR_HIGH = settings.BIRTH_YEAR_MAX + 1
+
     valid_data = {'birth_year': VALID_BIRTH_YEAR}
     serializer = UserUpdateSerializer(data=valid_data)
     assert serializer.is_valid()
@@ -68,18 +72,20 @@ def test_validate_method():
     assert 'birth_year' in excinfo.value.detail
 
 
+def validate_birth_year_data():
+    VALID_BIRTH_YEAR = (settings.BIRTH_YEAR_MIN + settings.BIRTH_YEAR_MAX) // 2
+    INVALID_BIRTH_YEAR_LOW = settings.BIRTH_YEAR_MIN - 1
+    INVALID_BIRTH_YEAR_HIGH = settings.BIRTH_YEAR_MAX + 1
+    return [
+        (VALID_BIRTH_YEAR, True),
+        (INVALID_BIRTH_YEAR_LOW, False),
+        (INVALID_BIRTH_YEAR_HIGH, False),
+    ]
 
-VALID_BIRTH_YEAR = (settings.BIRTH_YEAR_MIN + settings.BIRTH_YEAR_MAX) // 2
-INVALID_BIRTH_YEAR_LOW = settings.BIRTH_YEAR_MIN - 1
-INVALID_BIRTH_YEAR_HIGH = settings.BIRTH_YEAR_MAX + 1
 
 
 @pytest.mark.order(5)
-@pytest.mark.parametrize("birth_year, is_valid", [
-    (VALID_BIRTH_YEAR, True),
-    (INVALID_BIRTH_YEAR_LOW, False),
-    (INVALID_BIRTH_YEAR_HIGH, False)
-])
+@pytest.mark.parametrize("birth_year, is_valid", validate_birth_year_data())
 def test_validate_birth_year(birth_year, is_valid):
     serializer = UserUpdateSerializer(data={'birth_year': birth_year})
     if is_valid:
