@@ -3,10 +3,16 @@ from unittest import mock
 import pytest
 from django.contrib.auth import get_user_model
 from rest_framework import status
-from users.exceptions import OTPException
 from django.contrib.auth.hashers import make_password
+from rest_framework.exceptions import APIException
 
 User = get_user_model()
+
+
+class OTPException(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = 'OTP verification failed.'
+    default_code = 'otp_failed'
 
 
 @pytest.fixture
