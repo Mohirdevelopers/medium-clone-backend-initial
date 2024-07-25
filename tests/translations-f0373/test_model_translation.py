@@ -13,6 +13,7 @@ def test_modeltranslation_installed():
     loader = importlib.util.find_spec('modeltranslation')
     assert loader is not None, "modeltranslation package is not installed"
 
+
 @pytest.mark.order(2)
 @pytest.mark.django_db
 def test_locale_folders_exist():
