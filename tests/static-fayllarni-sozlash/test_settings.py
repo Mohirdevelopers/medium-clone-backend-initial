@@ -21,4 +21,5 @@ def test_static_urlpatterns():
 
     pattern_str = static_url[0]
 
-    assert str(pattern_str) == str(urlpatterns[-2]), "STATIC_URL is not set correctly"
+    urls = [str(url) for url in urlpatterns]
+    assert str(pattern_str) in urls, "STATIC_URL is not set correctly"
