@@ -176,7 +176,8 @@ def article_retrieve_data(request, user_factory):
     """
     The function creates data for testing article retrieval.
     """
-    from tests.factories.article_factory import TopicFactory, ArticleFactory
+    from tests.factories.article_factory import ArticleFactory
+    from tests.factories.topic_factory import TopicFactory
 
     topic = TopicFactory.create()
     user = user_factory.create()
