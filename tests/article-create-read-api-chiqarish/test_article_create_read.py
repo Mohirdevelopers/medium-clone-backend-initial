@@ -8,10 +8,7 @@ fake = Faker()
 
 User = get_user_model()
 
-xfail = pytest.mark.xfail
 
-
-@xfail
 @pytest.mark.order(1)
 def test_articles_app_created():
     """
@@ -20,7 +17,6 @@ def test_articles_app_created():
     assert "articles" in settings.INSTALLED_APPS
 
 
-@xfail(run=False)
 @pytest.mark.order(2)
 def test_articles_app_exists():
     """
@@ -36,7 +32,6 @@ def test_articles_app_exists():
     assert app_name in settings.INSTALLED_APPS, f"{app_name} app not installed"
 
 
-@xfail(run=False)
 @pytest.mark.order(3)
 def test_articles_model_created():
     """
@@ -49,7 +44,6 @@ def test_articles_model_created():
     assert Article._meta.ordering == ["-date_created"]
 
 
-@xfail(run=False)
 @pytest.mark.order(4)
 def test_topics_model_created():
     """
@@ -62,12 +56,11 @@ def test_topics_model_created():
     assert Topic._meta.ordering == ["-date_created"]
 
 
-@xfail(run=False)
-@pytest.mark.order(5)
 @pytest.fixture()
+@pytest.mark.order(5)
 def test_article_create_data(request, user_factory, topic_factory):
     """
-    The function create articles data for testing.
+    The function creates articles data for testing.
     """
 
     topic = topic_factory.create_batch(2)
@@ -134,7 +127,6 @@ def test_article_create_data(request, user_factory, topic_factory):
     return data[request.param]()
 
 
-@xfail(run=False)
 @pytest.mark.order(6)
 @pytest.mark.django_db
 @pytest.mark.parametrize(
@@ -176,12 +168,11 @@ def test_article_create(test_article_create_data, api_client, tokens):
         assert len(response.data['topics']) == 1
 
 
-@xfail(run=False)
-@pytest.mark.order(7)
 @pytest.fixture()
+@pytest.mark.order(7)
 def article_retrieve_data(request, topic_factory, article_factory, user_factory):
     """
-    The function tests article retrieval with multipart form data.
+    The function creates data for testing article retrieval.
     """
 
     topic = topic_factory.create()
@@ -214,7 +205,6 @@ def article_retrieve_data(request, topic_factory, article_factory, user_factory)
     return data[request.param]()
 
 
-@xfail(run=False)
 @pytest.mark.order(8)
 @pytest.mark.django_db
 @pytest.mark.parametrize(
