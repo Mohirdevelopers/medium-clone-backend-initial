@@ -14,7 +14,7 @@ def test_articles_app_created():
     """
     The function tests that the articles app is created.
     """
-    assert "articles" in settings.INSTALLED_APPS
+    assert "articles" in settings.INSTALLED_APPS, "articles app not installed"
 
 
 @pytest.mark.order(2)
