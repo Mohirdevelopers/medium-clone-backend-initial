@@ -41,7 +41,7 @@ def test_articles_model_created():
     assert Article._meta.db_table == "article"
     assert Article._meta.verbose_name == "Article"
     assert Article._meta.verbose_name_plural == "Articles"
-    assert Article._meta.ordering == ["-date_created"]
+    assert Article._meta.ordering == ["-created_at"]
 
 
 @pytest.mark.order(4)
@@ -53,7 +53,7 @@ def test_topics_model_created():
     assert Topic._meta.db_table == "topic"
     assert Topic._meta.verbose_name == "Topic"
     assert Topic._meta.verbose_name_plural == "Topics"
-    assert Topic._meta.ordering == ["-date_created"]
+    assert Topic._meta.ordering == ["name"]
 
 
 @pytest.fixture()
