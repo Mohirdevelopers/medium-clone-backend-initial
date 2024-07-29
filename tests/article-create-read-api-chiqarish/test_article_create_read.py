@@ -8,23 +8,22 @@ fake = Faker()
 
 User = get_user_model()
 
-# Store the state of the previous test
-previous_test_failed = False
+@pytest.fixture(scope="module")
+def test_state():
+    return {"previous_test_failed": False}
 
 @pytest.mark.order(1)
-def test_articles_app_created():
-    global previous_test_failed
+def test_articles_app_created(test_state):
     """
     The function tests that the articles app is created.
     """
     assert "articles" in settings.INSTALLED_APPS
-    previous_test_failed = False
+    test_state["previous_test_failed"] = False
 
 @pytest.mark.order(2)
-def test_articles_app_exists():
-    global previous_test_failed
-    if previous_test_failed:
-        pytest.xfail("Previous test failed, skipping this test.")
+def test_articles_app_exists(test_state):
+    if test_state["previous_test_failed"]:
+        pytest.skip("Previous test failed, skipping this test.")
     """
     The function tests that the articles app exists.
     """
@@ -35,13 +34,12 @@ def test_articles_app_exists():
     except ImportError:
         assert False, f"{app_name} app folder missing"
     assert app_name in settings.INSTALLED_APPS, f"{app_name} app not installed"
-    previous_test_failed = False
+    test_state["previous_test_failed"] = False
 
 @pytest.mark.order(3)
-def test_articles_model_created():
-    global previous_test_failed
-    if previous_test_failed:
-        pytest.xfail("Previous test failed, skipping this test.")
+def test_articles_model_created(test_state):
+    if test_state["previous_test_failed"]:
+        pytest.skip("Previous test failed, skipping this test.")
     """
     The function tests that the articles model is created.
     """
@@ -50,13 +48,12 @@ def test_articles_model_created():
     assert Article._meta.verbose_name == "Article"
     assert Article._meta.verbose_name_plural == "Articles"
     assert Article._meta.ordering == ["-date_created"]
-    previous_test_failed = False
+    test_state["previous_test_failed"] = False
 
 @pytest.mark.order(4)
-def test_topics_model_created():
-    global previous_test_failed
-    if previous_test_failed:
-        pytest.xfail("Previous test failed, skipping this test.")
+def test_topics_model_created(test_state):
+    if test_state["previous_test_failed"]:
+        pytest.skip("Previous test failed, skipping this test.")
     """
     The function tests that the topics model is created.
     """
@@ -65,14 +62,13 @@ def test_topics_model_created():
     assert Topic._meta.verbose_name == "Topic"
     assert Topic._meta.verbose_name_plural == "Topics"
     assert Topic._meta.ordering == ["-date_created"]
-    previous_test_failed = False
+    test_state["previous_test_failed"] = False
 
 @pytest.fixture()
 @pytest.mark.order(5)
-def test_article_create_data(request, user_factory, topic_factory):
-    global previous_test_failed
-    if previous_test_failed:
-        pytest.xfail("Previous test failed, skipping this test.")
+def test_article_create_data(request, user_factory, topic_factory, test_state):
+    if test_state["previous_test_failed"]:
+        pytest.skip("Previous test failed, skipping this test.")
     """
     The function create articles data for testing.
     """
@@ -152,10 +148,9 @@ def test_article_create_data(request, user_factory, topic_factory):
     ],
     indirect=True
 )
-def test_article_create(test_article_create_data, api_client, tokens):
-    global previous_test_failed
-    if previous_test_failed:
-        pytest.xfail("Previous test failed, skipping this test.")
+def test_article_create(test_article_create_data, api_client, tokens, test_state):
+    if test_state["previous_test_failed"]:
+        pytest.skip("Previous test failed, skipping this test.")
     """
     The function tests article creation with multipart form data.
     """
@@ -180,13 +175,13 @@ def test_article_create(test_article_create_data, api_client, tokens):
         assert response.data['summary'] == data['summary']
         assert response.data['content'] == data['content']
         assert len(response.data['topics']) == 1
+    test_state["previous_test_failed"] = False
 
 @pytest.fixture()
 @pytest.mark.order(7)
-def article_retrieve_data(request, topic_factory, article_factory, user_factory):
-    global previous_test_failed
-    if previous_test_failed:
-        pytest.xfail("Previous test failed, skipping this test.")
+def article_retrieve_data(request, topic_factory, article_factory, user_factory, test_state):
+    if test_state["previous_test_failed"]:
+        pytest.skip("Previous test failed, skipping this test.")
     """
     The function tests article retrieval with multipart form data.
     """
@@ -230,10 +225,9 @@ def article_retrieve_data(request, topic_factory, article_factory, user_factory)
     ],
     indirect=True
 )
-def test_article_retrieve(article_retrieve_data, api_client, tokens):
-    global previous_test_failed
-    if previous_test_failed:
-        pytest.xfail("Previous test failed, skipping this test.")
+def test_article_retrieve(article_retrieve_data, api_client, tokens, test_state):
+    if test_state["previous_test_failed"]:
+        pytest.skip("Previous test failed, skipping this test.")
     """
     The function tests article retrieval with multipart form data.
     """
@@ -248,3 +242,4 @@ def test_article_retrieve(article_retrieve_data, api_client, tokens):
     if response.status_code == status.HTTP_200_OK:
         assert response.status_code == status.HTTP_200_OK
         assert response.data['id'] == article_id
+    test_state["previous_test_failed"] = False
