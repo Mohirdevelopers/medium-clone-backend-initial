@@ -1,5 +1,7 @@
 import pytest
 import fakeredis
+from pytest_factoryboy import register
+from tests.factories.user_factory import UserFactory
 
 try:
     from rest_framework.test import APIClient
@@ -10,6 +12,8 @@ try:
     from rest_framework_simplejwt.tokens import RefreshToken
 except ImportError:
     pass
+
+register(UserFactory)
 
 
 @pytest.fixture
