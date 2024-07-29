@@ -63,7 +63,7 @@ def test_article_create_data(request, user_factory):
     The function creates articles data for testing.
     """
 
-    from tests.factories.article_factory import TopicFactory
+    from tests.factories.topic_factory import TopicFactory
 
     topic = TopicFactory.create_batch(2)
     user = user_factory.create()
