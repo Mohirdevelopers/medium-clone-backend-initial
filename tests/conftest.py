@@ -12,8 +12,6 @@ except ImportError:
     pass
 
 
-
-
 @pytest.fixture
 def api_client():
     def _api_client(token=None):

@@ -58,12 +58,14 @@ def test_topics_model_created():
 
 @pytest.fixture()
 @pytest.mark.order(5)
-def test_article_create_data(request, user_factory, topic_factory):
+def test_article_create_data(request, user_factory):
     """
     The function creates articles data for testing.
     """
 
-    topic = topic_factory.create_batch(2)
+    from tests.factories.article_factory import TopicFactory
+
+    topic = TopicFactory.create_batch(2)
     user = user_factory.create()
 
     def valid_data():
@@ -170,14 +172,15 @@ def test_article_create(test_article_create_data, api_client, tokens):
 
 @pytest.fixture()
 @pytest.mark.order(7)
-def article_retrieve_data(request, topic_factory, article_factory, user_factory):
+def article_retrieve_data(request, user_factory):
     """
     The function creates data for testing article retrieval.
     """
+    from tests.factories.article_factory import TopicFactory, ArticleFactory
 
-    topic = topic_factory.create()
+    topic = TopicFactory.create()
     user = user_factory.create()
-    article = article_factory.create(author=user)
+    article = ArticleFactory.create(author=user)
     article.topics.add(topic.id)
     article.save()
 
