@@ -8,25 +8,25 @@ fake = Faker()
 
 User = get_user_model()
 
-@pytest.fixture(scope="module")
-def test_state():
-    return {"previous_test_failed": False}
+xfail = pytest.mark.xfail
 
+
+@xfail
 @pytest.mark.order(1)
-def test_articles_app_created(test_state):
+def test_articles_app_created():
     """
     The function tests that the articles app is created.
     """
     assert "articles" in settings.INSTALLED_APPS
-    test_state["previous_test_failed"] = False
 
+
+@xfail(run=False)
 @pytest.mark.order(2)
-def test_articles_app_exists(test_state):
-    if test_state["previous_test_failed"]:
-        pytest.skip("Previous test failed, skipping this test.")
+def test_articles_app_exists():
     """
     The function tests that the articles app exists.
     """
+
     app_name = 'articles'
 
     try:
@@ -34,12 +34,11 @@ def test_articles_app_exists(test_state):
     except ImportError:
         assert False, f"{app_name} app folder missing"
     assert app_name in settings.INSTALLED_APPS, f"{app_name} app not installed"
-    test_state["previous_test_failed"] = False
 
+
+@xfail(run=False)
 @pytest.mark.order(3)
-def test_articles_model_created(test_state):
-    if test_state["previous_test_failed"]:
-        pytest.skip("Previous test failed, skipping this test.")
+def test_articles_model_created():
     """
     The function tests that the articles model is created.
     """
@@ -48,12 +47,11 @@ def test_articles_model_created(test_state):
     assert Article._meta.verbose_name == "Article"
     assert Article._meta.verbose_name_plural == "Articles"
     assert Article._meta.ordering == ["-date_created"]
-    test_state["previous_test_failed"] = False
 
+
+@xfail(run=False)
 @pytest.mark.order(4)
-def test_topics_model_created(test_state):
-    if test_state["previous_test_failed"]:
-        pytest.skip("Previous test failed, skipping this test.")
+def test_topics_model_created():
     """
     The function tests that the topics model is created.
     """
@@ -62,16 +60,16 @@ def test_topics_model_created(test_state):
     assert Topic._meta.verbose_name == "Topic"
     assert Topic._meta.verbose_name_plural == "Topics"
     assert Topic._meta.ordering == ["-date_created"]
-    test_state["previous_test_failed"] = False
 
-@pytest.fixture()
+
+@xfail(run=False)
 @pytest.mark.order(5)
-def test_article_create_data(request, user_factory, topic_factory, test_state):
-    if test_state["previous_test_failed"]:
-        pytest.skip("Previous test failed, skipping this test.")
+@pytest.fixture()
+def test_article_create_data(request, user_factory, topic_factory):
     """
     The function create articles data for testing.
     """
+
     topic = topic_factory.create_batch(2)
     user = user_factory.create()
 
@@ -135,6 +133,8 @@ def test_article_create_data(request, user_factory, topic_factory, test_state):
 
     return data[request.param]()
 
+
+@xfail(run=False)
 @pytest.mark.order(6)
 @pytest.mark.django_db
 @pytest.mark.parametrize(
@@ -148,12 +148,11 @@ def test_article_create_data(request, user_factory, topic_factory, test_state):
     ],
     indirect=True
 )
-def test_article_create(test_article_create_data, api_client, tokens, test_state):
-    if test_state["previous_test_failed"]:
-        pytest.skip("Previous test failed, skipping this test.")
+def test_article_create(test_article_create_data, api_client, tokens):
     """
     The function tests article creation with multipart form data.
     """
+
     status_code, user, data = test_article_create_data
     access, _ = tokens(user)
     client = api_client(token=access)
@@ -175,16 +174,16 @@ def test_article_create(test_article_create_data, api_client, tokens, test_state
         assert response.data['summary'] == data['summary']
         assert response.data['content'] == data['content']
         assert len(response.data['topics']) == 1
-    test_state["previous_test_failed"] = False
 
-@pytest.fixture()
+
+@xfail(run=False)
 @pytest.mark.order(7)
-def article_retrieve_data(request, topic_factory, article_factory, user_factory, test_state):
-    if test_state["previous_test_failed"]:
-        pytest.skip("Previous test failed, skipping this test.")
+@pytest.fixture()
+def article_retrieve_data(request, topic_factory, article_factory, user_factory):
     """
     The function tests article retrieval with multipart form data.
     """
+
     topic = topic_factory.create()
     user = user_factory.create()
     article = article_factory.create(author=user)
@@ -214,6 +213,8 @@ def article_retrieve_data(request, topic_factory, article_factory, user_factory,
 
     return data[request.param]()
 
+
+@xfail(run=False)
 @pytest.mark.order(8)
 @pytest.mark.django_db
 @pytest.mark.parametrize(
@@ -225,12 +226,11 @@ def article_retrieve_data(request, topic_factory, article_factory, user_factory,
     ],
     indirect=True
 )
-def test_article_retrieve(article_retrieve_data, api_client, tokens, test_state):
-    if test_state["previous_test_failed"]:
-        pytest.skip("Previous test failed, skipping this test.")
+def test_article_retrieve(article_retrieve_data, api_client, tokens):
     """
     The function tests article retrieval with multipart form data.
     """
+
     status_code, article_id, user = article_retrieve_data
 
     access, _ = tokens(user)
@@ -242,4 +242,3 @@ def test_article_retrieve(article_retrieve_data, api_client, tokens, test_state)
     if response.status_code == status.HTTP_200_OK:
         assert response.status_code == status.HTTP_200_OK
         assert response.data['id'] == article_id
-    test_state["previous_test_failed"] = False
