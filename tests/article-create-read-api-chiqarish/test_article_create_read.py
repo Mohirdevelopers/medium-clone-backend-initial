@@ -56,6 +56,7 @@ def test_topics_model_created():
     assert Topic._meta.ordering == ["-date_created"]
 
 
+@pytest.mark.order(5)
 @pytest.fixture()
 def test_article_create_data(request, user_factory, topic_factory):
     """
@@ -126,7 +127,7 @@ def test_article_create_data(request, user_factory, topic_factory):
     return data[request.param]()
 
 
-@pytest.mark.order(5)
+@pytest.mark.order(6)
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     'test_article_create_data',
@@ -167,6 +168,7 @@ def test_article_create(test_article_create_data, api_client, tokens):
         assert len(response.data['topics']) == 1
 
 
+@pytest.mark.order(7)
 @pytest.fixture()
 def article_retrieve_data(request, topic_factory, article_factory, user_factory):
     """
@@ -203,7 +205,7 @@ def article_retrieve_data(request, topic_factory, article_factory, user_factory)
     return data[request.param]()
 
 
-@pytest.mark.order(6)
+@pytest.mark.order(8)
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     'article_retrieve_data',
