@@ -2,10 +2,58 @@ import pytest
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from faker import Faker
+from django.conf import settings
 
 fake = Faker()
 
 User = get_user_model()
+
+
+@pytest.mark.order(1)
+def test_articles_app_created():
+    """
+    The function tests that the articles app is created.
+    """
+    assert "articles" in settings.INSTALLED_APPS
+
+
+@pytest.mark.order(2)
+def test_articles_app_exists():
+    """
+    The function tests that the articles app exists.
+    """
+
+    app_name = 'articles'
+
+    try:
+        import articles  # noqa
+    except ImportError:
+        assert False, f"{app_name} app folder missing"
+    assert app_name in settings.INSTALLED_APPS, f"{app_name} app not installed"
+
+
+@pytest.mark.order(3)
+def test_articles_model_created():
+    """
+    The function tests that the articles model is created.
+    """
+    from articles.models import Article
+    assert Article._meta.db_table == "article"
+    assert Article._meta.verbose_name == "Article"
+    assert Article._meta.verbose_name_plural == "Articles"
+    assert Article._meta.ordering == ["-date_created"]
+
+
+@pytest.mark.order(4)
+def test_topics_model_created():
+    """
+    The function tests that the topics model is created.
+    """
+    from articles.models import Topic
+    assert Topic._meta.db_table == "topic"
+    assert Topic._meta.verbose_name == "Topic"
+    assert Topic._meta.verbose_name_plural == "Topics"
+    assert Topic._meta.ordering == ["-date_created"]
 
 
 @pytest.fixture()
@@ -78,6 +126,7 @@ def test_article_create_data(request, user_factory, topic_factory):
     return data[request.param]()
 
 
+@pytest.mark.order(5)
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     'test_article_create_data',
@@ -154,6 +203,7 @@ def article_retrieve_data(request, topic_factory, article_factory, user_factory)
     return data[request.param]()
 
 
+@pytest.mark.order(6)
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     'article_retrieve_data',
