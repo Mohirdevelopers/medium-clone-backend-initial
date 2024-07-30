@@ -69,10 +69,10 @@ def test_article_delete(article_delete_data, api_client, tokens):
 
         assert response.status_code == status_code
 
-        from tests.factories.article_factory import ArticleFactory
+        from articles.models import Article
 
         if status_code == 204:
-            article = ArticleFactory._meta.model.objects.filter(id=article_id).first()
+            article = Article.objects.filter(id=article_id).first()
             assert article.status == "trash", "Article is not deleted or not moved to trash"
 
             response = client.get(f'/articles/{article_id}/')
