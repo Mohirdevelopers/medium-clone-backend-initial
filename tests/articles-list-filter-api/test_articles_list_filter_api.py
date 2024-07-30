@@ -41,8 +41,21 @@ def test_articles_filterset_class_create():
     assert ArticleFilter, "ArticleFilter not created"
 
 
-@pytest.fixture
 @pytest.mark.order(4)
+def test_comment_model_created():
+    """
+    The function tests that the comment model is created.
+    """
+
+    from articles.models import Comment
+    assert Comment._meta.db_table == "comment", "Comment model not created"
+    assert Comment._meta.verbose_name == "Comment", "Comment model not created"
+    assert Comment._meta.verbose_name_plural == "Comments", "Comment model not created"
+    assert Comment._meta.ordering == ["-created_at"], "Comment model not created"
+
+
+@pytest.fixture
+@pytest.mark.order(5)
 def articles_data(user_factory):
     """
     The function create articles data for testing.
@@ -64,7 +77,7 @@ def articles_data(user_factory):
 
 
 @pytest.mark.django_db
-@pytest.mark.order(5)
+@pytest.mark.order(6)
 def test_articles(articles_data, api_client, tokens):
     """
     The function tests the articles.
@@ -81,7 +94,7 @@ def test_articles(articles_data, api_client, tokens):
 
 
 @pytest.mark.django_db
-@pytest.mark.order(6)
+@pytest.mark.order(7)
 def test_articles_top(articles_data, api_client, tokens):
     """
     The function tests the association between articles and topics.
@@ -111,7 +124,7 @@ def test_articles_top(articles_data, api_client, tokens):
 
 
 @pytest.mark.django_db
-@pytest.mark.order(7)
+@pytest.mark.order(8)
 def test_articles_topic_id(articles_data, api_client, tokens):
     """
     The function tests the association between articles and topics.
