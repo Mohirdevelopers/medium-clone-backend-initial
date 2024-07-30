@@ -73,7 +73,8 @@ def test_articles(articles_data, api_client, tokens):
     articles, _, user = articles_data
     access, _ = tokens(user)
 
-    response = api_client(token=access).get('/articles/')
+    client = api_client(token=access)
+    response = client.get('/articles/')
 
     assert response.status_code == status.HTTP_200_OK
     assert len(response.data['results']) == 5
