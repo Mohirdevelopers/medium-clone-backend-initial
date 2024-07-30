@@ -13,13 +13,13 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - medium_db
-      - medium_redis
+      - medium_db_host
+      - medium_redis_host
     networks:
       medium_network:
 
-  medium_db:
-    container_name: medium_db
+  medium_db_host:
+    container_name: medium_db_host
     image: postgres:15-alpine
     restart: always
     env_file:
@@ -27,14 +27,14 @@ services:
     expose:
       - "5432"
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres-pass
-      - POSTGRES_DB=medium_db
+      - POSTGRES_USER=${DB_USER-medium_user}
+      - POSTGRES_PASSWORD=${DB_PASSWORD-medium_user_password}
+      - POSTGRES_DB=${DB_NAME-medium_db}
     networks:
       - medium_network
 
-  medium_redis:
-    container_name: medium_redis
+  medium_redis_host:
+    container_name: medium_redis_host
     image: "redis:7-alpine"
     env_file:
       - .env.example

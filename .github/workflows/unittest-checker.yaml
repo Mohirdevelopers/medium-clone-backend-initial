@@ -1,4 +1,4 @@
-name: Medium Clone Check CI/CD
+name: Medium Clone Project CI/CD
 on:
   workflow_dispatch:
     inputs:
@@ -12,7 +12,7 @@ on:
 
 jobs:
   deploy:
-    name: Check code via CI/CD
+    name: Deploy and run tests
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -51,11 +51,15 @@ jobs:
           mv original-repo/tests forked-repo/
           rm -rf original-repo
 
-      - name: Create .env file
+      - name: Create .env file from .env.example
         working-directory: forked-repo
         run: cp .env.example .env
 
-      - name: Run app
+      - name: Set environment variables
+        working-directory: forked-repo
+        run: export $(grep -v '^#' .env | xargs)
+
+      - name: Build and run application via docker compose
         working-directory: forked-repo
         run: |
           docker compose up -d --build
@@ -64,24 +68,24 @@ jobs:
           sleep 5s
           docker logs medium_app
 
-      - name: Curl
+      - name: Check application health
         run: |
           sleep 5s
           curl -v http://127.0.0.1:8000/health/
 
-      - name: Run Tests
+      - name: Run application tests via pytest
         working-directory: forked-repo
         run: docker compose exec medium_app pytest ${{ github.event.inputs.tests_path }} --cache-clear -vv --json-report --json-report-file=./reports/unittest-checker-report.json --json-report-indent=2
         continue-on-error: true
 
-      - name: Upload artifact
+      - name: Upload created pytest report file as an artifact
         uses: actions/upload-artifact@v4
         with:
           name: unittest-checker-artifact
           path: forked-repo/reports/unittest-checker-report.json
 
-      - name: Send run_id
-        if: success() || failure()
+      - name: Send a signal to the webhook that the job has finished.
+        if: always()
         run: |
           status=${{ job.status }}
           if [ "$status" == "success" ]; then
