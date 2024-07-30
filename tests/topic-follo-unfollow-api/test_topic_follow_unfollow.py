@@ -8,7 +8,19 @@ fake = Faker()
 User = get_user_model()
 
 
+@pytest.mark.order(1)
+def test_topic_follow_view_created():
+    """
+    The function tests topic follow view created.
+    """
+
+    from articles.views import TopicFollowView
+
+    assert TopicFollowView, "TopicFollowView not created"
+
+
 @pytest.fixture()
+@pytest.mark.order(2)
 def follow_to_topic_data(request, user_factory):
     """
     Fixture to provide data for follow to topic tests.
@@ -43,6 +55,7 @@ def follow_to_topic_data(request, user_factory):
     return data[request.param]()
 
 @pytest.mark.django_db
+@pytest.mark.order(3)
 @pytest.mark.parametrize(
     'follow_to_topic_data',
     [
