@@ -38,10 +38,10 @@ def test_articles_model_created():
     The function tests that the articles model is created.
     """
     from articles.models import Article
-    assert Article._meta.db_table == "article"
-    assert Article._meta.verbose_name == "Article"
-    assert Article._meta.verbose_name_plural == "Articles"
-    assert Article._meta.ordering == ["-created_at"]
+    assert Article._meta.db_table == "article", "Article model not created"
+    assert Article._meta.verbose_name == "Article", "Article model not created"
+    assert Article._meta.verbose_name_plural == "Articles", "Article model not created"
+    assert Article._meta.ordering == ["-created_at"], "Article model not created"
 
 
 @pytest.mark.order(4)
@@ -50,50 +50,59 @@ def test_topics_model_created():
     The function tests that the topics model is created.
     """
     from articles.models import Topic
-    assert Topic._meta.db_table == "topic"
-    assert Topic._meta.verbose_name == "Topic"
-    assert Topic._meta.verbose_name_plural == "Topics"
-    assert Topic._meta.ordering == ["name"]
+    assert Topic._meta.db_table == "topic", "Topic model not created"
+    assert Topic._meta.verbose_name == "Topic", "Topic model not created"
+    assert Topic._meta.verbose_name_plural == "Topics", "Topic model not created"
+    assert Topic._meta.ordering == ["name"], "Topic model not created"
 
 
 @pytest.mark.order(5)
+def test_articlesviewset_created():
+    """
+    The function tests that the articles viewset is created.
+    """
+    from articles.views import ArticlesView
+    assert ArticlesView, "ArticlesView not created"
+
+
+@pytest.mark.order(6)
 def test_article_create_serializer_created():
     """
     The function tests that the article serializer is created.
     """
     from articles.serializers import ArticleCreateSerializer
-    assert ArticleCreateSerializer
+    assert ArticleCreateSerializer, "ArticleCreateSerializer not created"
 
 
-@pytest.mark.order(6)
+@pytest.mark.order(7)
 def test_topic_serializer_created():
     """
     The function tests that the topic serializer is created.
     """
     from articles.serializers import TopicSerializer
-    assert TopicSerializer
+    assert TopicSerializer, "TopicSerializer not created"
 
 
-@pytest.mark.order(7)
+@pytest.mark.order(8)
 def test_claps_serializer_created():
     """
     The function tests that the claps serializer is created.
     """
     from articles.serializers import ClapSerializer
-    assert ClapSerializer
+    assert ClapSerializer, "ClapSerializer not created"
 
 
-@pytest.mark.order(8)
+@pytest.mark.order(9)
 def test_article_retrieve_serializer_created():
     """
     The function tests that the article retrieve serializer is created.
     """
     from articles.serializers import ArticleDetailSerializer
-    assert ArticleDetailSerializer
+    assert ArticleDetailSerializer, "ArticleDetailSerializer not created"
 
 
 @pytest.fixture()
-@pytest.mark.order(9)
+@pytest.mark.order(10)
 def test_article_create_data(request, user_factory):
     """
     The function creates articles data for testing.
@@ -165,7 +174,7 @@ def test_article_create_data(request, user_factory):
     return data[request.param]()
 
 
-@pytest.mark.order(10)
+@pytest.mark.order(11)
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     'test_article_create_data',
@@ -207,7 +216,7 @@ def test_article_create(test_article_create_data, api_client, tokens):
 
 
 @pytest.fixture()
-@pytest.mark.order(11)
+@pytest.mark.order(12)
 def article_retrieve_data(request, user_factory):
     """
     The function creates data for testing article retrieval.
@@ -245,7 +254,7 @@ def article_retrieve_data(request, user_factory):
     return data[request.param]()
 
 
-@pytest.mark.order(12)
+@pytest.mark.order(13)
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     'article_retrieve_data',
