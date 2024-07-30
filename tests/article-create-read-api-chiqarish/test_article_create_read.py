@@ -88,8 +88,8 @@ def test_article_retrieve_serializer_created():
     """
     The function tests that the article retrieve serializer is created.
     """
-    from articles.serializers import ArticleDetailSerializers
-    assert ArticleDetailSerializers
+    from articles.serializers import ArticleDetailSerializer
+    assert ArticleDetailSerializer
 
 
 @pytest.fixture()
