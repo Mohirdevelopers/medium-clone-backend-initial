@@ -19,8 +19,19 @@ def test_articles_list_serializer_create():
     assert ArticleListSerializer, "ArticleListSerializer not created"
 
 
-@pytest.fixture
 @pytest.mark.order(2)
+def test_articles_filterset_class_create():
+    """
+    The function tests the filterset class of articles list.
+    """
+
+    from articles.filters import ArticleFilter
+
+    assert ArticleFilter, "ArticleFilter not created"
+
+
+@pytest.fixture
+@pytest.mark.order(3)
 def articles_data(user_factory):
     """
     The function create articles data for testing.
@@ -42,7 +53,7 @@ def articles_data(user_factory):
 
 
 @pytest.mark.django_db
-@pytest.mark.order(3)
+@pytest.mark.order(4)
 def test_articles(articles_data, api_client, tokens):
     """
     The function tests the articles.
@@ -58,7 +69,7 @@ def test_articles(articles_data, api_client, tokens):
 
 
 @pytest.mark.django_db
-@pytest.mark.order(4)
+@pytest.mark.order(5)
 def test_articles_top(articles_data, api_client, tokens):
     """
     The function tests the association between articles and topics.
@@ -88,7 +99,7 @@ def test_articles_top(articles_data, api_client, tokens):
 
 
 @pytest.mark.django_db
-@pytest.mark.order(5)
+@pytest.mark.order(6)
 def test_articles_topic_id(articles_data, api_client, tokens):
     """
     The function tests the association between articles and topics.
