@@ -9,6 +9,17 @@ User = get_user_model()
 
 
 @pytest.mark.order(1)
+def test_topic_follow_model_created():
+    """
+    The function tests topic follow model created.
+    """
+
+    from articles.models import TopicFollow
+
+    assert TopicFollow, "TopicFollow model not created"
+
+
+@pytest.mark.order(2)
 def test_topic_follow_view_created():
     """
     The function tests topic follow view created.
@@ -20,7 +31,7 @@ def test_topic_follow_view_created():
 
 
 @pytest.fixture()
-@pytest.mark.order(2)
+@pytest.mark.order(3)
 def follow_to_topic_data(request, user_factory):
     """
     Fixture to provide data for follow to topic tests.
@@ -55,7 +66,7 @@ def follow_to_topic_data(request, user_factory):
     return data[request.param]()
 
 @pytest.mark.django_db
-@pytest.mark.order(3)
+@pytest.mark.order(4)
 @pytest.mark.parametrize(
     'follow_to_topic_data',
     [
@@ -83,6 +94,7 @@ def test_follow_to_topic(follow_to_topic_data, api_client, tokens):
 
 
 @pytest.fixture()
+@pytest.mark.order(5)
 def unfollow_to_topic_data(request, user_factory):
     """
     Fixture to provide data for unfollow to topic tests.
@@ -117,6 +129,7 @@ def unfollow_to_topic_data(request, user_factory):
     return data[request.param]()
 
 @pytest.mark.django_db
+@pytest.mark.order(6)
 @pytest.mark.parametrize(
     'unfollow_to_topic_data',
     [
