@@ -58,14 +58,14 @@ def test_topics_model_created():
 
 @pytest.fixture()
 @pytest.mark.order(5)
-def test_article_create_data(request, user_factory, topic_factory):
+def test_article_create_data(request, user_factory):
     """
     The function creates articles data for testing.
     """
 
-    # from tests.factories.topic_factory import TopicFactory
+    from tests.factories.topic_factory import TopicFactory
 
-    topic = topic_factory.create_batch(2)
+    topic = TopicFactory.create_batch(2)
     user = user_factory.create()
 
     def valid_data():
