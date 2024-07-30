@@ -14,7 +14,7 @@ def article_delete_data(request, user_factory):
     Fixture to provide data for DELETE article tests.
     """
 
-    from ..factories.article_factory import ArticleFactory
+    from tests.factories.article_factory import ArticleFactory
 
     user = user_factory.create()
     another_user = user_factory.create()
