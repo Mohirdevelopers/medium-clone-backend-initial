@@ -1,4 +1,5 @@
 import pytest
+import importlib.util
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from faker import Faker
@@ -9,6 +10,16 @@ User = get_user_model()
 
 
 @pytest.mark.order(1)
+def test_django_filter_via_importlib():
+    """
+    The function tests that the django_filters is imported.
+    """
+
+    loader = importlib.util.find_spec('django_filters')
+    assert loader is not None, "django_filters is not installed"
+
+
+@pytest.mark.order(2)
 def test_articles_list_serializer_create():
     """
     The function tests the serializer of articles list.
@@ -19,7 +30,7 @@ def test_articles_list_serializer_create():
     assert ArticleListSerializer, "ArticleListSerializer not created"
 
 
-@pytest.mark.order(2)
+@pytest.mark.order(3)
 def test_articles_filterset_class_create():
     """
     The function tests the filterset class of articles list.
@@ -31,7 +42,7 @@ def test_articles_filterset_class_create():
 
 
 @pytest.fixture
-@pytest.mark.order(3)
+@pytest.mark.order(4)
 def articles_data(user_factory):
     """
     The function create articles data for testing.
@@ -53,7 +64,7 @@ def articles_data(user_factory):
 
 
 @pytest.mark.django_db
-@pytest.mark.order(4)
+@pytest.mark.order(5)
 def test_articles(articles_data, api_client, tokens):
     """
     The function tests the articles.
@@ -69,7 +80,7 @@ def test_articles(articles_data, api_client, tokens):
 
 
 @pytest.mark.django_db
-@pytest.mark.order(5)
+@pytest.mark.order(6)
 def test_articles_top(articles_data, api_client, tokens):
     """
     The function tests the association between articles and topics.
@@ -99,7 +110,7 @@ def test_articles_top(articles_data, api_client, tokens):
 
 
 @pytest.mark.django_db
-@pytest.mark.order(6)
+@pytest.mark.order(7)
 def test_articles_topic_id(articles_data, api_client, tokens):
     """
     The function tests the association between articles and topics.
