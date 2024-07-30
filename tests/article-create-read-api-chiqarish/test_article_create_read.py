@@ -56,8 +56,44 @@ def test_topics_model_created():
     assert Topic._meta.ordering == ["name"]
 
 
-@pytest.fixture()
 @pytest.mark.order(5)
+def test_article_create_serializer_created():
+    """
+    The function tests that the article serializer is created.
+    """
+    from articles.serializers import ArticleCreateSerializer
+    assert ArticleCreateSerializer
+
+
+@pytest.mark.order(6)
+def test_topic_serializer_created():
+    """
+    The function tests that the topic serializer is created.
+    """
+    from articles.serializers import TopicSerializer
+    assert TopicSerializer
+
+
+@pytest.mark.order(7)
+def test_claps_serializer_created():
+    """
+    The function tests that the claps serializer is created.
+    """
+    from articles.serializers import ClapSerializer
+    assert ClapSerializer
+
+
+@pytest.mark.order(8)
+def test_article_retrieve_serializer_created():
+    """
+    The function tests that the article retrieve serializer is created.
+    """
+    from articles.serializers import ArticleDetailSerializers
+    assert ArticleDetailSerializers
+
+
+@pytest.fixture()
+@pytest.mark.order(9)
 def test_article_create_data(request, user_factory):
     """
     The function creates articles data for testing.
@@ -129,7 +165,7 @@ def test_article_create_data(request, user_factory):
     return data[request.param]()
 
 
-@pytest.mark.order(6)
+@pytest.mark.order(10)
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     'test_article_create_data',
@@ -171,7 +207,7 @@ def test_article_create(test_article_create_data, api_client, tokens):
 
 
 @pytest.fixture()
-@pytest.mark.order(7)
+@pytest.mark.order(11)
 def article_retrieve_data(request, user_factory):
     """
     The function creates data for testing article retrieval.
@@ -209,7 +245,7 @@ def article_retrieve_data(request, user_factory):
     return data[request.param]()
 
 
-@pytest.mark.order(8)
+@pytest.mark.order(12)
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     'article_retrieve_data',
