@@ -29,13 +29,16 @@ def test_favorite_article_view_created():
 
 @pytest.fixture
 @pytest.mark.order(3)
-def favorite_article_data(request, user_factory, article_factory):
+def favorite_article_data(request, user_factory):
     """
     Provides test data for adding articles to favorites.
     """
+
+    from tests.factories.article_factory import ArticleFactory
+
     user = user_factory.create()
-    article = article_factory.create(author=user)
-    added_article = article_factory.create(author=user)
+    article = ArticleFactory.create(author=user)
+    added_article = ArticleFactory.create(author=user)
 
     user.favorites.create(article=added_article)
 
@@ -88,14 +91,18 @@ def test_add_article_to_favorites(api_client, tokens, favorite_article_data):
 
 @pytest.fixture
 @pytest.mark.order(5)
-def remove_favorite_article_data(request, user_factory, article_factory, favorite_factory):
+def remove_favorite_article_data(request, user_factory):
     """
     Provides test data for removing articles from favorites.
     """
-    user = user_factory.create()
-    article = article_factory.create(author=user)
 
-    favorite_factory.create(user=user, article=article)
+    from tests.factories.article_factory import ArticleFactory
+    from tests.factories.favorite_factory import FavoriteFactory
+
+    user = user_factory.create()
+    article = ArticleFactory.create(author=user)
+
+    FavoriteFactory.create(user=user, article=article)
 
     def remove_favorite():
         return (
@@ -152,19 +159,23 @@ def test_favorite_serializer_created():
 
 @pytest.fixture
 @pytest.mark.order(9)
-def retrieve_user_favorites_data(request, user_factory, article_factory, favorite_factory):
+def retrieve_user_favorites_data(request, user_factory):
     """
     Provides test data for retrieving the user's favorite articles.
     """
+
+    from tests.factories.article_factory import ArticleFactory
+    from tests.factories.favorite_factory import FavoriteFactory
+
     user = user_factory.create()
     articles = [
-        article_factory.create(author=user),
-        article_factory.create(author=user)
+        ArticleFactory.create(author=user),
+        ArticleFactory.create(author=user)
     ]
 
     # Assuming you have a Favorite model or similar for managing user favorites
     for article in articles:
-        favorite_factory.create(user=user, article=article)
+        FavoriteFactory.create(user=user, article=article)
 
     def get_favorites():
         return (
