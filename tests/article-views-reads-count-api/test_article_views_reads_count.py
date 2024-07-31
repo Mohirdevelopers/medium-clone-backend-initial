@@ -68,8 +68,38 @@ def test_increment_reads_count_article_not_found(article_data, api_client, token
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
-@pytest.mark.django_db
 @pytest.mark.order(4)
+def test_reading_history_model_exists():
+    """
+    Test that the ReadingHistory model exists.
+    """
+
+    from articles.models import ReadingHistory
+    assert ReadingHistory, "ReadingHistory model not created"
+
+
+@pytest.mark.order(5)
+def test_reading_history_serializer_exists():
+    """
+    Test that the ReadingHistorySerializer exists.
+    """
+
+    from articles.serializers import ReadingHistorySerializer
+    assert ReadingHistorySerializer, "ReadingHistorySerializer not created"
+
+
+@pytest.mark.order(6)
+def test_reading_history_view_exists():
+    """
+    Test if reading history view exists.
+    """
+
+    from articles.views import ReadingHistoryView
+    assert ReadingHistoryView, "ReadingHistoryView not created"
+
+
+@pytest.mark.django_db
+@pytest.mark.order(7)
 def test_view_article(article_data, api_client, tokens):
     """
     Test retrieving an article and incrementing the views count.
