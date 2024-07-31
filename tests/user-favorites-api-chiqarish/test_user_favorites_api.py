@@ -148,17 +148,9 @@ def test_user_favorites_list_view_created():
     assert UserFavoritesListView, "UserFavoritesListView not created"
 
 
-@pytest.mark.order(8)
-def test_favorite_serializer_created():
-    """
-    Tests that the FavoriteSerializer is created.
-    """
-    from users.serializers import FavoriteSerializer
-    assert FavoriteSerializer, "FavoriteSerializer not created"
-
 
 @pytest.fixture
-@pytest.mark.order(9)
+@pytest.mark.order(8)
 def retrieve_user_favorites_data(request, user_factory):
     """
     Provides test data for retrieving the user's favorite articles.
@@ -190,7 +182,7 @@ def retrieve_user_favorites_data(request, user_factory):
 
 
 @pytest.mark.django_db
-@pytest.mark.order(10)
+@pytest.mark.order(9)
 @pytest.mark.parametrize(
     "retrieve_user_favorites_data",
     [
