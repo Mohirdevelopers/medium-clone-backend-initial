@@ -397,8 +397,30 @@ def test_create_comment_with_parent(api_client, tokens, create_comment_with_pare
             assert response.data['detail'] == 'No Article matches the given query.'
 
 
-@pytest.fixture
 @pytest.mark.order(11)
+def test_article_detail_comments_serializer_created():
+    """
+    The function tests the article detail comments serializer.
+    """
+
+    from articles.serializers import ArticleDetailCommentsSerializer
+
+    assert ArticleDetailCommentsSerializer, "ArticleDetailCommentsSerializer not created"
+
+
+@pytest.mark.order(12)
+def test_article_detail_comments_view_created():
+    """
+    The function tests the article detail comments view.
+    """
+
+    from articles.views import ArticleDetailCommentsView
+
+    assert ArticleDetailCommentsView, "ArticleDetailCommentsView not created"
+
+
+@pytest.fixture
+@pytest.mark.order(13)
 def get_comment_from_article(request, user_factory):
     """
     Provides test data for retrieving comments from an article.
@@ -429,7 +451,7 @@ def get_comment_from_article(request, user_factory):
 
 
 @pytest.mark.django_db
-@pytest.mark.order(12)
+@pytest.mark.order(14)
 @pytest.mark.parametrize(
     "get_comment_from_article",
     [
