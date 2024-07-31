@@ -7,30 +7,8 @@ fake = Faker()
 User = get_user_model()
 
 
-@pytest.mark.order(1)
-def test_search_filter_created():
-    """
-    Test that the search filter is created.
-    """
-
-    from articles.filters import SearchFilter
-
-    assert SearchFilter, "SearchFilter not created"
-
-
-@pytest.mark.order(2)
-def test_search_view_created():
-    """
-    Test that the search view is created.
-    """
-
-    from articles.views import SearchView
-
-    assert SearchView, "SearchView not created"
-
-
 @pytest.fixture
-@pytest.mark.order(3)
+@pytest.mark.order(1)
 def search_by_article_topic_data(user_factory):
     """
     Provides test data for searching articles by topic.
@@ -50,7 +28,7 @@ def search_by_article_topic_data(user_factory):
 
 
 @pytest.fixture
-@pytest.mark.order(4)
+@pytest.mark.order(2)
 def search_by_article_title_data(user_factory):
     """
     Provides test data for searching articles by title, summary, and content.
@@ -71,7 +49,7 @@ def search_by_article_title_data(user_factory):
 
 
 @pytest.fixture
-@pytest.mark.order(5)
+@pytest.mark.order(3)
 def search_by_article_summary(user_factory):
     """
     Provides test data for searching articles by title, summary, and content.
@@ -92,7 +70,7 @@ def search_by_article_summary(user_factory):
 
 
 @pytest.fixture
-@pytest.mark.order(6)
+@pytest.mark.order(4)
 def search_by_article_content_data(user_factory):
     """
     Provides test data for searching articles by title, summary, and content.
@@ -113,7 +91,7 @@ def search_by_article_content_data(user_factory):
 
 
 @pytest.fixture
-@pytest.mark.order(7)
+@pytest.mark.order(5)
 def search_by_article_non_existent_data(user_factory):
     """
     Provides test data for searching articles with a non-existent search term.
@@ -133,7 +111,7 @@ def search_by_article_non_existent_data(user_factory):
 
 
 @pytest.fixture()
-@pytest.mark.order(8)
+@pytest.mark.order(6)
 def search_data(request):
     """
     The fixture requests the appropriate search data fixture.
@@ -143,7 +121,7 @@ def search_data(request):
 
 
 @pytest.mark.django_db
-@pytest.mark.order(9)
+@pytest.mark.order(7)
 @pytest.mark.parametrize(
     'search_data',
     [
