@@ -7,7 +7,27 @@ fake = Faker()
 User = get_user_model()
 
 
+@pytest.mark.order(1)
+def test_create_comments_view_created():
+    """
+    Test for creating comments
+    """
+
+    from articles.views import CreateCommentsView
+    assert CreateCommentsView, "CreateCommentsView not created"
+
+
+@pytest.mark.order(2)
+def test_comment_serializer_created():
+    """
+    The function tests that the comment serializer is created.
+    """
+    from articles.serializers import CommentSerializer
+    assert CommentSerializer, "CommentSerializer not created"
+
+
 @pytest.fixture
+@pytest.mark.order(3)
 def create_comments_data(request, user_factory):
     """
     The function creates comments data for testing.
@@ -79,6 +99,7 @@ def create_comments_data(request, user_factory):
 
 
 @pytest.mark.django_db
+@pytest.mark.order(4)
 @pytest.mark.parametrize(
     "create_comments_data",
     [
@@ -111,6 +132,7 @@ def test_create_comments_article(api_client, tokens, create_comments_data):
 
 
 @pytest.fixture
+@pytest.mark.order(5)
 def delete_comment_data(request, user_factory):
     """
     Provides test data for deleting comments.
@@ -149,6 +171,7 @@ def delete_comment_data(request, user_factory):
 
 
 @pytest.mark.django_db
+@pytest.mark.order(6)
 @pytest.mark.parametrize(
     "delete_comment_data",
     [
@@ -179,6 +202,7 @@ def test_delete_comment(api_client, tokens, delete_comment_data):
 
 
 @pytest.fixture
+@pytest.mark.order(7)
 def update_comment_data(request, user_factory):
     """
     Provides test data for updating comments.
@@ -244,6 +268,7 @@ def update_comment_data(request, user_factory):
 
 
 @pytest.mark.django_db
+@pytest.mark.order(8)
 @pytest.mark.parametrize(
     "update_comment_data",
     [
@@ -278,6 +303,7 @@ def test_partial_update_comment(api_client, tokens, update_comment_data):
 
 
 @pytest.fixture
+@pytest.mark.order(9)
 def create_comment_with_parent_data(request, user_factory):
     """
     Provides test data for creating a comment with a parent.
@@ -336,6 +362,7 @@ def create_comment_with_parent_data(request, user_factory):
 
 
 @pytest.mark.django_db
+@pytest.mark.order(10)
 @pytest.mark.parametrize(
     "create_comment_with_parent_data",
     [
@@ -371,6 +398,7 @@ def test_create_comment_with_parent(api_client, tokens, create_comment_with_pare
 
 
 @pytest.fixture
+@pytest.mark.order(11)
 def get_comment_from_article(request, user_factory):
     """
     Provides test data for retrieving comments from an article.
@@ -401,6 +429,7 @@ def get_comment_from_article(request, user_factory):
 
 
 @pytest.mark.django_db
+@pytest.mark.order(12)
 @pytest.mark.parametrize(
     "get_comment_from_article",
     [
