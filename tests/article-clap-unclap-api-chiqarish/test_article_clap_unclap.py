@@ -15,8 +15,19 @@ def test_clap_view_exists():
 
     assert ClapView, "ClapView not created"
 
-@pytest.fixture()
+
 @pytest.mark.order(2)
+def test_clap_serializer_created():
+    """
+    The function tests that the clap serializer is created.
+    """
+    from articles.serializers import ClapSerializer
+
+    assert ClapSerializer, "ClapSerializer not created"
+
+
+@pytest.fixture()
+@pytest.mark.order(3)
 def clap_data(request, user_factory):
     """
     Fixture to provide data for clapping tests.
@@ -48,7 +59,7 @@ def clap_data(request, user_factory):
 
 
 @pytest.mark.django_db
-@pytest.mark.order(3)
+@pytest.mark.order(4)
 @pytest.mark.parametrize(
     'clap_data',
     [
@@ -78,7 +89,7 @@ def test_clap_article(clap_data, api_client, tokens):
 
 
 @pytest.fixture()
-@pytest.mark.order(4)
+@pytest.mark.order(5)
 def undo_clap_data(request, user_factory):
     """
     Fixture to provide data for undoing claps tests.
@@ -112,7 +123,7 @@ def undo_clap_data(request, user_factory):
 
 
 @pytest.mark.django_db
-@pytest.mark.order(5)
+@pytest.mark.order(6)
 @pytest.mark.parametrize(
     'undo_clap_data',
     [
