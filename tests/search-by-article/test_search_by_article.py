@@ -141,7 +141,7 @@ def test_search_articles(search_data, api_client, tokens):
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.get('/articles/search/', data=query_params)
+    response = client.get('/articles/', data=query_params)
 
     assert response.status_code == status.HTTP_200_OK
 
