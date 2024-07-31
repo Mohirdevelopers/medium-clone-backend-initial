@@ -11,7 +11,7 @@ def test_favorite_model_created():
     Tests that the Favorite model is created.
     """
 
-    from articles.models import Favorite
+    from users.models import Favorite
     assert Favorite._meta.db_table == "favorite", "Favorite model not created"
     assert Favorite._meta.verbose_name == "Favorite", "Favorite model not created"
     assert Favorite._meta.verbose_name_plural == "Favorites", "Favorite model not created"
@@ -144,7 +144,7 @@ def test_user_favorites_list_view_created():
     """
     Tests that the UserFavoritesListView view is created.
     """
-    from articles.views import UserFavoritesListView
+    from users.views import UserFavoritesListView
     assert UserFavoritesListView, "UserFavoritesListView not created"
 
 
@@ -153,7 +153,7 @@ def test_favorite_serializer_created():
     """
     Tests that the FavoriteSerializer is created.
     """
-    from articles.serializers import FavoriteSerializer
+    from users.serializers import FavoriteSerializer
     assert FavoriteSerializer, "FavoriteSerializer not created"
 
 
