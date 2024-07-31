@@ -14,7 +14,7 @@ def test_recommendation_model_created():
     The function tests the creation of the RecommendationView model.
     """
 
-    from articles.models import Recommendation
+    from users.models import Recommendation
     assert Recommendation, "Recommendation model not created"
     assert Recommendation._meta.db_table == "recommendation", "Recommendation model not created"
     assert Recommendation._meta.verbose_name == "Recommendation", "Recommendation model not created"
@@ -28,7 +28,7 @@ def test_recommendation_serializer_created():
     The function tests the creation of the RecommendationSerializer model.
     """
 
-    from articles.serializers import RecommendationSerializer
+    from users.serializers import RecommendationSerializer
     assert RecommendationSerializer, "RecommendationSerializer not created"
 
 
@@ -38,7 +38,7 @@ def test_recommendation_view_created():
     The function tests the creation of the RecommendationView model.
     """
 
-    from articles.views import RecommendationView
+    from users.views import RecommendationView
     assert RecommendationView, "RecommendationView not created"
 
 
