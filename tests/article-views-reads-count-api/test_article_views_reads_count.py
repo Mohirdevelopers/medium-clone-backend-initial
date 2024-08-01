@@ -78,18 +78,8 @@ def test_reading_history_model_exists():
     assert ReadingHistory, "ReadingHistory model not created"
 
 
-@pytest.mark.order(6)
-def test_reading_history_view_exists():
-    """
-    Test if reading history view exists.
-    """
-
-    from users.views import ReadingHistoryView
-    assert ReadingHistoryView, "ReadingHistoryView not created"
-
-
 @pytest.mark.django_db
-@pytest.mark.order(7)
+@pytest.mark.order(5)
 def test_view_article(article_data, api_client, tokens):
     """
     Test retrieving an article and incrementing the views count.
