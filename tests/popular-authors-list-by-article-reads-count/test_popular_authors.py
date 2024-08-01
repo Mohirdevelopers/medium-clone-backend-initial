@@ -3,6 +3,7 @@ from rest_framework import status
 
 
 @pytest.fixture()
+@pytest.mark.order(1)
 def popular_authors_data(user_factory):
     """
     Fixture to provide data for popular authors tests.
@@ -22,6 +23,7 @@ def popular_authors_data(user_factory):
 
 
 @pytest.mark.django_db
+@pytest.mark.order(2)
 def test_popular_authors_list(popular_authors_data, api_client, tokens):
     """
     Test fetching the popular authors list.
@@ -56,6 +58,7 @@ def test_popular_authors_list(popular_authors_data, api_client, tokens):
 
 
 @pytest.mark.django_db
+@pytest.mark.order(3)
 def test_popular_authors_list_no_authors(api_client, user_factory, tokens):
     """
     Test when there are no active users with published articles.
@@ -72,6 +75,7 @@ def test_popular_authors_list_no_authors(api_client, user_factory, tokens):
 
 
 @pytest.mark.django_db
+@pytest.mark.order(4)
 def test_popular_authors_list_unauthorized(api_client):
     """
     Test unauthorized access to the popular authors list.
