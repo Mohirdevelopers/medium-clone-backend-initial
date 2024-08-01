@@ -193,6 +193,6 @@ def test_retrieve_user_favorites(api_client, tokens, retrieve_user_favorites_dat
     assert response.status_code == status_code
     if status_code == status.HTTP_200_OK:
         favorite_articles = response.data.get('results', [])
-        favorite_article_ids = [article['article']['id'] for article in favorite_articles]
+        favorite_article_ids = [article['id'] for article in favorite_articles]
 
         assert set(favorite_article_ids) == set(expected_article_ids)
