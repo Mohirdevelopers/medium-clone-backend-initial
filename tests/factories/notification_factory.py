@@ -1,4 +1,4 @@
-from articles.models import Notification
+from users.models import Notification
 from faker import Faker
 import factory
 from .user_factory import UserFactory
