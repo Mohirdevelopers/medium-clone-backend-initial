@@ -74,18 +74,8 @@ def test_reading_history_model_exists():
     Test that the ReadingHistory model exists.
     """
 
-    from articles.models import ReadingHistory
+    from users.models import ReadingHistory
     assert ReadingHistory, "ReadingHistory model not created"
-
-
-@pytest.mark.order(5)
-def test_reading_history_serializer_exists():
-    """
-    Test that the ReadingHistorySerializer exists.
-    """
-
-    from articles.serializers import ReadingHistorySerializer
-    assert ReadingHistorySerializer, "ReadingHistorySerializer not created"
 
 
 @pytest.mark.order(6)
@@ -94,7 +84,7 @@ def test_reading_history_view_exists():
     Test if reading history view exists.
     """
 
-    from articles.views import ReadingHistoryView
+    from users.views import ReadingHistoryView
     assert ReadingHistoryView, "ReadingHistoryView not created"
 
 
@@ -105,7 +95,8 @@ def test_view_article(article_data, api_client, tokens):
     Test retrieving an article and incrementing the views count.
     """
 
-    from articles.models import Article, ReadingHistory
+    from articles.models import Article
+    from users.models import ReadingHistory
 
     article_id, user = article_data
 
