@@ -1,17 +1,19 @@
 import pytest
 from rest_framework import status
-from articles.models import ArticleStatus
 
 
 @pytest.fixture()
-def popular_authors_data(user_factory, article_factory):
+def popular_authors_data(user_factory):
     """
     Fixture to provide data for popular authors tests.
     """
+
+    from tests.factories.article_factory import ArticleFactory
+
     users = [user_factory.create(is_active=True) for _ in range(5)]
 
     for user in users:
-        articles = article_factory.create_batch(3, author=user, status=ArticleStatus.PUBLISH)
+        articles = ArticleFactory.create_batch(3, author=user)
         for article in articles:
             article.reads_count = 10
             article.save()
@@ -39,7 +41,7 @@ def test_popular_authors_list(popular_authors_data, api_client, tokens):
 
     sorted_users = sorted(
         popular_authors_data,
-        key=lambda u: sum(article.reads_count for article in u.article_set.filter(status=ArticleStatus.PUBLISH)),
+        key=lambda u: sum(article.reads_count for article in u.article_set.filter(status='publish')),
         reverse=True
     )
 
@@ -47,8 +49,8 @@ def test_popular_authors_list(popular_authors_data, api_client, tokens):
         current_user = next((user for user in sorted_users if user.id == data['results'][i]['id']), None)
         next_user = next((user for user in sorted_users if user.id == data['results'][i + 1]['id']), None)
 
-        current_total_reads = sum(article.reads_count for article in current_user.article_set.filter(status=ArticleStatus.PUBLISH)) if current_user else 0
-        next_total_reads = sum(article.reads_count for article in next_user.article_set.filter(status=ArticleStatus.PUBLISH)) if next_user else 0
+        current_total_reads = sum(article.reads_count for article in current_user.article_set.filter(status='publish')) if current_user else 0
+        next_total_reads = sum(article.reads_count for article in next_user.article_set.filter(status='publish')) if next_user else 0
 
         assert current_total_reads >= next_total_reads
 
