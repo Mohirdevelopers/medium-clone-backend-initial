@@ -139,18 +139,8 @@ def test_remove_article_from_favorites(api_client, tokens, remove_favorite_artic
     assert response.status_code == status_code
 
 
-@pytest.mark.order(7)
-def test_user_favorites_list_view_created():
-    """
-    Tests that the UserFavoritesListView view is created.
-    """
-    from users.views import UserFavoritesListView
-    assert UserFavoritesListView, "UserFavoritesListView not created"
-
-
-
 @pytest.fixture
-@pytest.mark.order(8)
+@pytest.mark.order(7)
 def retrieve_user_favorites_data(request, user_factory):
     """
     Provides test data for retrieving the user's favorite articles.
@@ -165,7 +155,6 @@ def retrieve_user_favorites_data(request, user_factory):
         ArticleFactory.create(author=user)
     ]
 
-    # Assuming you have a Favorite model or similar for managing user favorites
     for article in articles:
         FavoriteFactory.create(user=user, article=article)
 
@@ -182,7 +171,7 @@ def retrieve_user_favorites_data(request, user_factory):
 
 
 @pytest.mark.django_db
-@pytest.mark.order(9)
+@pytest.mark.order(8)
 @pytest.mark.parametrize(
     "retrieve_user_favorites_data",
     [
@@ -199,7 +188,7 @@ def test_retrieve_user_favorites(api_client, tokens, retrieve_user_favorites_dat
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.get('/users/favorites/')
+    response = client.get('/articles/?is_user_favorites=true')
 
     assert response.status_code == status_code
     if status_code == status.HTTP_200_OK:
