@@ -55,7 +55,7 @@ def test_pin_article(api_client, tokens, article_data):
     assert response.status_code == status.HTTP_200_OK
     assert response.data['detail'] == "Maqola pin qilindi."
 
-    user_response = client.get('/users/me/articles/')
+    user_response = client.get('/articles/?is_author_articles=true')
     pinned_article_ids = [item['id'] for item in user_response.data['results']]
     assert len(pinned_article_ids) > 0
     assert pinned_article_ids[0] == article.id
