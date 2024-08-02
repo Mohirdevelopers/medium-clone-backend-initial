@@ -1,4 +1,4 @@
-from users.models import Favorite
+from articles.models import Favorite
 from .article_factory import ArticleFactory
 from faker import Faker
 import factory

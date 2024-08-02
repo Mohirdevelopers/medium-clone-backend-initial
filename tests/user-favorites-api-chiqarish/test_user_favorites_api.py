@@ -11,7 +11,7 @@ def test_favorite_model_created():
     Tests that the Favorite model is created.
     """
 
-    from users.models import Favorite
+    from articles.models import Favorite
     assert Favorite._meta.db_table == "favorite", "Favorite model not created"
     assert Favorite._meta.verbose_name == "Favorite", "Favorite model not created"
     assert Favorite._meta.verbose_name_plural == "Favorites", "Favorite model not created"
