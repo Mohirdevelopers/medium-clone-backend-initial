@@ -6,146 +6,77 @@ from faker import Faker
 fake = Faker()
 User = get_user_model()
 
-
 @pytest.fixture
-@pytest.mark.order(1)
-def search_by_article_topic_data(user_factory):
+def search_data_factory(user_factory, request):
     """
-    Provides test data for searching articles by topic.
+    Provides test data for searching articles by various criteria.
     """
-
     from tests.factories.topic_factory import TopicFactory
     from tests.factories.article_factory import ArticleFactory
 
     user = user_factory.create()
     topic = TopicFactory.create()
-    articles = ArticleFactory.create_batch(3, author=user)
+    search_type = request.param
 
-    for article in articles:
-        article.topics.add(topic)
+    if search_type == "by_topic":
+        articles = ArticleFactory.create_batch(3, author=user)
+        for article in articles:
+            article.topics.add(topic)
+        return user, {"search": topic.name}, [article.id for article in articles]
 
-    return user, {"search": topic.name}
+    elif search_type == "by_title":
+        title = fake.sentence()
+        articles = ArticleFactory.create_batch(3, author=user, title=title)
+        for article in articles:
+            article.topics.add(topic)
+        return user, {"search": title}, [article.id for article in articles]
 
+    elif search_type == "by_summary":
+        summary = fake.paragraph()
+        articles = ArticleFactory.create_batch(3, author=user, summary=summary)
+        for article in articles:
+            article.topics.add(topic)
+        return user, {"search": summary}, [article.id for article in articles]
 
-@pytest.fixture
-@pytest.mark.order(2)
-def search_by_article_title_data(user_factory):
-    """
-    Provides test data for searching articles by title, summary, and content.
-    """
+    elif search_type == "by_content":
+        content = fake.text()
+        articles = ArticleFactory.create_batch(3, author=user, content=content)
+        for article in articles:
+            article.topics.add(topic)
+        return user, {"search": content}, [article.id for article in articles]
 
-    from tests.factories.topic_factory import TopicFactory
-    from tests.factories.article_factory import ArticleFactory
-
-    user = user_factory.create()
-    title = fake.sentence()
-    topic = TopicFactory.create()
-    articles = ArticleFactory.create_batch(3, author=user, title=title)
-
-    for article in articles:
-        article.topics.add(topic)
-
-    return user, {"search_title": title}
-
-
-@pytest.fixture
-@pytest.mark.order(3)
-def search_by_article_summary(user_factory):
-    """
-    Provides test data for searching articles by title, summary, and content.
-    """
-
-    from tests.factories.topic_factory import TopicFactory
-    from tests.factories.article_factory import ArticleFactory
-
-    user = user_factory.create()
-    summary = fake.paragraph()
-    topic = TopicFactory.create()
-    articles = ArticleFactory.create_batch(3, author=user, summary=summary)
-
-    for article in articles:
-        article.topics.add(topic)
-
-    return user, {"search": summary}
-
-
-@pytest.fixture
-@pytest.mark.order(4)
-def search_by_article_content_data(user_factory):
-    """
-    Provides test data for searching articles by title, summary, and content.
-    """
-
-    from tests.factories.topic_factory import TopicFactory
-    from tests.factories.article_factory import ArticleFactory
-
-    user = user_factory.create()
-    content = fake.text()
-    topic = TopicFactory.create()
-    articles = ArticleFactory.create_batch(3, author=user, content=content)
-
-    for article in articles:
-        article.topics.add(topic)
-
-    return user, {"search": content}
-
-
-@pytest.fixture
-@pytest.mark.order(5)
-def search_by_article_non_existent_data(user_factory):
-    """
-    Provides test data for searching articles with a non-existent search term.
-    """
-
-    from tests.factories.topic_factory import TopicFactory
-    from tests.factories.article_factory import ArticleFactory
-
-    user = user_factory.create()
-    topic = TopicFactory.create()
-    articles = ArticleFactory.create_batch(3, author=user)
-
-    for article in articles:
-        article.topics.add(topic)
-
-    return user, {"search": "non_existent_term"}
-
-
-@pytest.fixture()
-@pytest.mark.order(6)
-def search_data(request):
-    """
-    The fixture requests the appropriate search data fixture.
-    """
-    fixture_name = request.param
-    return request.getfixturevalue(fixture_name)
-
+    elif search_type == "non_existent":
+        articles = ArticleFactory.create_batch(3, author=user)
+        for article in articles:
+            article.topics.add(topic)
+        return user, {"search": "non_existent_term"}, []
 
 @pytest.mark.django_db
-@pytest.mark.order(7)
 @pytest.mark.parametrize(
-    'search_data',
+    'search_data_factory',
     [
-        "search_by_article_topic_data",
-        "search_by_article_title_data",
-        "search_by_article_summary",
-        "search_by_article_content_data",
-        "search_by_article_non_existent_data"
+        "by_topic",
+        "by_title",
+        "by_summary",
+        "by_content",
+        "non_existent"
     ],
     indirect=True
 )
-def test_search_articles(search_data, api_client, tokens):
+def test_search_articles(search_data_factory, api_client, tokens):
     """
     The function tests the search functionality of articles.
     """
-    user, query_params = search_data
+    user, query_params, expected_article_ids = search_data_factory
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.get('/articles/', data=query_params)
+    response = client.get('http://127.0.0.1:8000/articles/', data=query_params)
 
     assert response.status_code == status.HTTP_200_OK
 
     if query_params.get("search") == "non_existent_term":
         assert len(response.data['results']) == 0
     else:
-        assert len(response.data['results']) > 0
+        returned_article_ids = [article['id'] for article in response.data['results']]
+        assert set(expected_article_ids) == set(returned_article_ids), "Returned articles do not match the expected articles"
