@@ -1,6 +1,6 @@
 # PostgreSQL Buyruqlari
 
-Ushbu qo'llanma PostgreSQL ma'lumotlar bazasi bilan ishlash uchun Windows va Unix-ga o'xshash tizimlarda (MacOS) asosiy buyruqlarni o'z ichiga oladi.
+Ushbu qo'llanma PostgreSQL ma'lumotlar bazasi bilan ishlash uchun Unix-ga o'xshash tizimlarda (MacOS) asosiy buyruqlarni o'z ichiga oladi.
 
 ## Unix-ga O'xshash Tizimlarda (MacOS)
 
