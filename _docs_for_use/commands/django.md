@@ -7,6 +7,11 @@ Ushbu qo'llanmada Django yordamida testlarni o'tkazish uchun turli buyruqlar kel
     python manage.py runserver
     ```
 
+- **Yangi django app yaratish**
+    ```
+    python manage.py startapp <app_name>
+    ```
+
 - **Migratsiyalarni amalga oshiring (agar sizda modellar mavjud bo'lsa)**
     ```
     python manage.py makemigrations
