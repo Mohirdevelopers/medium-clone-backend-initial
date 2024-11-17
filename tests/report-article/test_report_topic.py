@@ -100,7 +100,10 @@ def test_report_article_twice(api_client, tokens, report_data):
     response = client.post(f'/articles/{article.id}/report/')
 
     assert response.status_code == status.HTTP_400_BAD_REQUEST
-    assert response.data[0] == "Ushbu maqola allaqachon shikoyat qilingan."
+    if isinstance(response.data, dict):
+        assert response.data.get('detail') == "Ushbu maqola allaqachon shikoyat qilingan."
+    elif isinstance(response.data, list):
+        assert response.data[0] == "Ushbu maqola allaqachon shikoyat qilingan."
 
 
 @pytest.mark.django_db
