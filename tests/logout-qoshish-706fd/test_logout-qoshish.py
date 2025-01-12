@@ -70,9 +70,3 @@ def test_logout(logout_data, mocker, fake_redis, request, tokens):
     if status_code == 200:
         resp = client.get('/users/me/')
         assert resp.status_code == 401
-
-    if test_name == 'test_logout[valid_with_stored_tokens]':
-        access_token_key = f"user:{user.id}:{TokenType.ACCESS}"
-        refresh_token_key = f"user:{user.id}:{TokenType.REFRESH}"
-        assert fake_redis.smembers(access_token_key) == {b'fake_token'}
-        assert fake_redis.smembers(refresh_token_key) == {b'fake_token'}

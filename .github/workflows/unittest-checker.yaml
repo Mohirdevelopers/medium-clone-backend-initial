@@ -29,6 +29,13 @@ jobs:
           --form 'github_username=${{ github.actor }}' \
           --form 'action_run_id=${{ github.run_id }}' \
           --form 'status=started'
+          
+          curl -X 'POST' --location 'https://api-dev.mohirpool.uz/api/site/accelerators/code-reviews/github-workflows/' \
+          --header 'X-API-KEY: ${{ secrets.X_API_KEY }}' \
+          --form 'github_username=${{ github.actor }}' \
+          --form 'github_action_run_id=${{ github.run_id }}' \
+          --form 'action_status=started' \
+          --form 'clean_env_step=started'
 
       - name: Checkout original repository
         uses: actions/checkout@v3
@@ -59,6 +66,15 @@ jobs:
         working-directory: forked-repo
         run: export $(grep -v '^#' .env | xargs)
 
+      - name: Installing Deps Status
+        run: |
+          curl -X 'POST' --location 'https://api-dev.mohirpool.uz/api/site/accelerators/code-reviews/github-workflows/' \
+          --header 'X-API-KEY: ${{ secrets.X_API_KEY }}' \
+          --form 'github_username=${{ github.actor }}' \
+          --form 'github_action_run_id=${{ github.run_id }}' \
+          --form 'clean_env_step=completed' \
+          --form 'install_dependencies_step=started'
+
       - name: Build and run application via docker compose
         working-directory: forked-repo
         run: |
@@ -68,10 +84,28 @@ jobs:
           sleep 5s
           docker logs medium_app
 
+      - name: Running Project Status
+        run: |
+          curl -X 'POST' --location 'https://api-dev.mohirpool.uz/api/site/accelerators/code-reviews/github-workflows/' \
+          --header 'X-API-KEY: ${{ secrets.X_API_KEY }}' \
+          --form 'github_username=${{ github.actor }}' \
+          --form 'github_action_run_id=${{ github.run_id }}' \
+          --form 'install_dependencies_step=completed' \
+          --form 'application_health_step=started'
+
       - name: Check application health
         run: |
           sleep 5s
           curl -v http://127.0.0.1:8000/health/
+
+      - name: Application tests Status
+        run: |
+          curl -X 'POST' --location 'https://api-dev.mohirpool.uz/api/site/accelerators/code-reviews/github-workflows/' \
+          --header 'X-API-KEY: ${{ secrets.X_API_KEY }}' \
+          --form 'github_username=${{ github.actor }}' \
+          --form 'github_action_run_id=${{ github.run_id }}' \
+          --form 'application_health_step=completed' \
+          --form 'run_tests_step=started'
 
       - name: Run application tests via pytest
         working-directory: forked-repo
@@ -93,6 +127,14 @@ jobs:
           else
             status="failed"
           fi
+          
+          curl -X 'POST' --location 'https://api-dev.mohirpool.uz/api/site/accelerators/code-reviews/github-workflows/' \
+          --header 'X-API-KEY: ${{ secrets.X_API_KEY }}' \
+          --form 'github_username=${{ github.actor }}' \
+          --form 'github_action_run_id=${{ github.run_id }}' \
+          --form 'run_tests_step=completed' \
+          --form "action_status=$status"
+          
           curl -X PUT --location 'https://api-dev.mohirpool.uz/api/site/accelerators/code-reviews/github-feedbacks/${{ github.event.inputs.github_feedback_id }}/' \
           --header 'X-API-KEY: ${{ secrets.X_API_KEY }}' \
           --form 'github_username=${{ github.actor }}' \
