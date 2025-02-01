@@ -77,7 +77,7 @@ def test_clap_article(clap_data, api_client, tokens):
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.post(f'/articles/{article_id}/clap/')
+    response = client.post(f'/api/articles/{article_id}/clap/')
 
     assert response.status_code == status_code
     if is_clapped is not True:
@@ -141,7 +141,7 @@ def test_undo_clap_article(undo_clap_data, api_client, tokens):
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.delete(f'/articles/{article_id}/clap/')
+    response = client.delete(f'/api/articles/{article_id}/clap/')
 
     assert response.status_code == status_code
 

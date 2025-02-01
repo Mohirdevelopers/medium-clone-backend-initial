@@ -32,7 +32,7 @@ def test_popular_authors_list(popular_authors_data, api_client, tokens):
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.get('/users/articles/popular/')
+    response = client.get('/api/users/articles/popular/')
 
     assert response.status_code == status.HTTP_200_OK
 
@@ -67,7 +67,7 @@ def test_popular_authors_list_no_authors(api_client, user_factory, tokens):
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.get('/users/articles/popular/')
+    response = client.get('/api/users/articles/popular/')
 
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
@@ -82,5 +82,5 @@ def test_popular_authors_list_unauthorized(api_client):
     """
 
     client = api_client(token='access')
-    response = client.get('/users/articles/popular/')
+    response = client.get('/api/users/articles/popular/')
     assert response.status_code == status.HTTP_401_UNAUTHORIZED

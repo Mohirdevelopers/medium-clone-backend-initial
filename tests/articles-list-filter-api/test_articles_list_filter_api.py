@@ -87,7 +87,7 @@ def test_articles(articles_data, api_client, tokens):
     access, _ = tokens(user)
 
     client = api_client(token=access)
-    response = client.get('/articles/')
+    response = client.get('/api/articles/')
 
     assert response.status_code == status.HTTP_200_OK
     assert len(response.data['results']) == 5
@@ -112,13 +112,13 @@ def test_articles_top(articles_data, api_client, tokens):
 
     access, _ = tokens(user)
 
-    response = api_client(token=access).get('/articles/?get_top_articles=2')
+    response = api_client(token=access).get('/api/articles/?get_top_articles=2')
     assert response.status_code == status.HTTP_200_OK
     assert len(response.data['results']) == 2
     assert response.data['results'][0]['id'] == article_0_id
     assert response.data['results'][1]['id'] == article_1_id
 
-    response1 = api_client(token=access).get('/articles/?get_top_articles=None')
+    response1 = api_client(token=access).get('/api/articles/?get_top_articles=None')
     assert response1.status_code == status.HTTP_400_BAD_REQUEST
     assert response1.data['get_top_articles'][0] == 'Enter a number.'
 
@@ -134,5 +134,5 @@ def test_articles_topic_id(articles_data, api_client, tokens):
     access, _ = tokens(user)
 
     topic_id = topics[0].id
-    response = api_client(token=access).get(f'/articles/?topic_id={topic_id}')
+    response = api_client(token=access).get(f'/api/articles/?topic_id={topic_id}')
     assert response.status_code == status.HTTP_200_OK

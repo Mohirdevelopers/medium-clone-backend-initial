@@ -44,7 +44,7 @@ def test_notifications(notification_data_factory, api_client, tokens):
     client = api_client(token=access)
 
     # Test getting all notifications
-    response = client.get('/users/notifications/')
+    response = client.get('/api/users/notifications/')
     assert response.status_code == status.HTTP_200_OK
     assert len(response.data['results']) == len(notifications)
 
@@ -52,17 +52,17 @@ def test_notifications(notification_data_factory, api_client, tokens):
         notification = notifications[0]
 
         # Test retrieving a single notification
-        response = client.get(f'/users/notifications/{notification.id}/')
+        response = client.get(f'/api/users/notifications/{notification.id}/')
         assert response.status_code == status.HTTP_200_OK
         assert response.data['id'] == notification.id
 
         # Test updating a notification to mark it as read
-        response = client.patch(f'/users/notifications/{notification.id}/', data={'read': True})
+        response = client.patch(f'/api/users/notifications/{notification.id}/', data={'read': True})
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
         notification.refresh_from_db()
         assert notification.read_at is not None
 
-        response = client.get('/users/notifications/')
+        response = client.get('/api/users/notifications/')
         notifications = response.data.get('results', [])
         assert all(n['id'] != notification.id for n in notifications)

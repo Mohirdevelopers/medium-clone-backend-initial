@@ -102,7 +102,7 @@ def test_user_me_patch(user_update_data, api_client):
     status_code, access, update_data = user_update_data()
 
     client = api_client(token=access)
-    url = '/users/me/'
+    url = '/api/users/me/'
 
     if 'avatar' in update_data:
         avatar_data = update_data['avatar']

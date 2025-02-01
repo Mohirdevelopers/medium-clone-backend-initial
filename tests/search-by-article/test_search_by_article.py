@@ -71,7 +71,7 @@ def test_search_articles(search_data_factory, api_client, tokens):
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.get('http://127.0.0.1:8000/articles/', data=query_params)
+    response = client.get('/api/articles/', data=query_params)
 
     assert response.status_code == status.HTTP_200_OK
 

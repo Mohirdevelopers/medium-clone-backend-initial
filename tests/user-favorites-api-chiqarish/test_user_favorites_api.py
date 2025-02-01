@@ -79,7 +79,7 @@ def test_favorite_article(api_client, tokens, article_data):
     client = api_client(token=access)
 
     if status_code == 201 or status_code == 400:
-        response = client.post(f'/articles/{article_id}/favorite/')
+        response = client.post(f'/api/articles/{article_id}/favorite/')
         assert response.status_code == status_code
 
         if status_code == status.HTTP_201_CREATED:
@@ -87,8 +87,8 @@ def test_favorite_article(api_client, tokens, article_data):
         elif status_code == status.HTTP_400_BAD_REQUEST:
             assert response.data['detail'] == "Maqola sevimlilarga allaqachon qo'shilgan."
     elif status_code == 204:
-        client.post(f'/articles/{article_id}/favorite/')
-        response = client.delete(f'/articles/{article_id}/favorite/')
+        client.post(f'/api/articles/{article_id}/favorite/')
+        response = client.delete(f'/api/articles/{article_id}/favorite/')
         assert response.status_code == status_code
 
 
@@ -121,7 +121,7 @@ def test_retrieve_user_favorites(api_client, tokens, retrieve_user_favorites_dat
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.get('/articles/?is_user_favorites=true')
+    response = client.get('/api/articles/?is_user_favorites=true')
 
     assert response.status_code == status_code
     if status_code == status.HTTP_200_OK:

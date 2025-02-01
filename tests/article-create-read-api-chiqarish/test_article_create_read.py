@@ -203,7 +203,7 @@ def test_article_create(test_article_create_data, api_client, tokens):
         "topic_ids": data.get('topics')
     }
 
-    response = client.post('/articles/', data=data, format='multipart')
+    response = client.post('/api/articles/', data=data, format='multipart')
 
     assert response.status_code == status_code
 
@@ -274,7 +274,7 @@ def test_article_retrieve(article_retrieve_data, api_client, tokens):
 
     access, _ = tokens(user)
     client = api_client(token=access)
-    response = client.get(f'/articles/{article_id}/')
+    response = client.get(f'/api/articles/{article_id}/')
 
     assert response.status_code == status_code
 

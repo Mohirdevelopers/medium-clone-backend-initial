@@ -121,7 +121,7 @@ def test_create_comments_article(api_client, tokens, create_comments_data):
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.post(f'/articles/{article_id}/comments/', data=comment_data, format='json')
+    response = client.post(f'/api/articles/{article_id}/comments/', data=comment_data, format='json')
 
     assert response.status_code == status_code
 
@@ -190,7 +190,7 @@ def test_delete_comment(api_client, tokens, delete_comment_data):
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.delete(f'/articles/comments/{comment_id}/')
+    response = client.delete(f'/api/articles/comments/{comment_id}/')
 
     assert response.status_code == status_code
     if status_code == 204:
@@ -289,7 +289,7 @@ def test_partial_update_comment(api_client, tokens, update_comment_data):
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.patch(f'/articles/comments/{comment_id}/', data=update_data, format='json')
+    response = client.patch(f'/api/articles/comments/{comment_id}/', data=update_data, format='json')
 
     assert response.status_code == status_code
     if status_code == 200:
@@ -382,7 +382,7 @@ def test_create_comment_with_parent(api_client, tokens, create_comment_with_pare
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.post(f'/articles/{article_id}/comments/', data=comment_data, format='json')
+    response = client.post(f'/api/articles/{article_id}/comments/', data=comment_data, format='json')
 
     assert response.status_code == status_code
 
@@ -468,12 +468,12 @@ def test_get_comment_from_article(api_client, tokens, get_comment_from_article):
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.get(f'/articles/{article_id}/detail/comments/')
+    response = client.get(f'/api/articles/{article_id}/detail/comments/')
 
     assert response.status_code == status_code
 
     if status_code == status.HTTP_200_OK:
         results = response.data.get('results', [])
-        assert len(results[0]["comments"]) == len(expected_comments)
+        assert len(results) == len(expected_comments)
         for comment in expected_comments:
-            assert any(c['content'] == comment.content for c in results[0]["comments"])
+            assert any(c['content'] == comment.content for c in results)

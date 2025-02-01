@@ -74,16 +74,16 @@ def test_follow_and_unfollow_topic(topic_follow_data, api_client, tokens):
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.post(f'/articles/topics/{topic_id}/follow/')
+    response = client.post(f'/api/articles/topics/{topic_id}/follow/')
     assert response.status_code == status_code
 
     if status_code == status.HTTP_201_CREATED:
-        response = client.post(f'/articles/topics/{topic_id}/follow/')
+        response = client.post(f'/api/articles/topics/{topic_id}/follow/')
         assert response.status_code == status.HTTP_200_OK
         assert response.data['detail'].startswith("Siz allaqachon")
 
-        response = client.delete(f'/articles/topics/{topic_id}/follow/')
+        response = client.delete(f'/api/articles/topics/{topic_id}/follow/')
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
-        response = client.delete(f'/articles/topics/{topic_id}/follow/')
+        response = client.delete(f'/api/articles/topics/{topic_id}/follow/')
         assert response.status_code == status.HTTP_404_NOT_FOUND

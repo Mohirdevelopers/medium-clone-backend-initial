@@ -36,7 +36,7 @@ def test_archive_article(api_client, tokens, article_data):
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.post(f'/articles/{article.id}/archive/')
+    response = client.post(f'/api/articles/{article.id}/archive/')
     assert response.status_code == status.HTTP_200_OK
     assert response.data['detail'] == "Maqola arxivlandi."
 
@@ -51,16 +51,16 @@ def test_pin_article(api_client, tokens, article_data):
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.post(f'/articles/{article.id}/pin/')
+    response = client.post(f'/api/articles/{article.id}/pin/')
     assert response.status_code == status.HTTP_200_OK
     assert response.data['detail'] == "Maqola pin qilindi."
 
-    user_response = client.get('/articles/?is_author_articles=true')
+    user_response = client.get('/api/articles/?is_author_articles=true')
     pinned_article_ids = [item['id'] for item in user_response.data['results']]
     assert len(pinned_article_ids) > 0
     assert pinned_article_ids[0] == article.id
 
-    response = client.post(f'/articles/{article.id}/pin/')
+    response = client.post(f'/api/articles/{article.id}/pin/')
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
 
@@ -74,11 +74,11 @@ def test_unpin_article(api_client, tokens, article_data):
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    client.post(f'/articles/{article.id}/pin/')
+    client.post(f'/api/articles/{article.id}/pin/')
 
-    response = client.delete(f'/articles/{article.id}/unpin/')
+    response = client.delete(f'/api/articles/{article.id}/unpin/')
     assert response.status_code == status.HTTP_204_NO_CONTENT
 
-    response = client.delete(f'/articles/{article.id}/unpin/')
+    response = client.delete(f'/api/articles/{article.id}/unpin/')
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert response.data['detail'] == "Maqola topilmadi.."

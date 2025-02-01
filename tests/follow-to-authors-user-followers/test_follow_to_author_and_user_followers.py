@@ -72,12 +72,12 @@ def test_follow_author(api_client, follow_author_data, tokens):
     client = api_client(token=access)
 
     if author:
-        response = client.post(f"/users/{author.id}/follow/")
+        response = client.post(f"/api/users/{author.id}/follow/")
         assert response.status_code == status_code
-        assert response.data['detail'] in ["Muvaffaqiyatli follow qilindi.", "Siz allaqachon ushbu foydalanuvchini kuzatyapsiz."]
+        assert response.data['detail'] in ["Mofaqqiyatli follow qilindi.", "Siz allaqachon ushbu foydalanuvchini kuzatyapsiz."]
 
         client = api_client(token=access)
-        followings_response = client.get("/users/following/")
+        followings_response = client.get("/api/users/following/")
         followings_ids = [followee['id'] for followee in followings_response.data['results']]
         assert author.id in followings_ids
 
@@ -85,13 +85,13 @@ def test_follow_author(api_client, follow_author_data, tokens):
             access, _ = tokens(author)
             client = api_client(token=access)
 
-            response = client.get("/users/followers/")
+            response = client.get("/api/users/followers/")
 
             assert response.status_code == status.HTTP_200_OK
             follower_ids = [follower['id'] for follower in response.data['results']]
             assert user.id in follower_ids
     else:
-        response = client.post(f"/users/{author}/follow/")
+        response = client.post(f"/api/users/{author}/follow/")
         assert response.status_code == status_code
 
 
@@ -145,18 +145,18 @@ def test_unfollow_author(api_client, unfollow_author_data, tokens):
     client = api_client(token=access)
 
     if author:
-        response = client.delete(f"/users/{author.id}/follow/")
+        response = client.delete(f"/api/users/{author.id}/follow/")
         assert response.status_code == status_code
 
         if status_code == status.HTTP_204_NO_CONTENT:
             access, _ = tokens(author)
             client = api_client(token=access)
 
-            response = client.get("/users/followers/")
+            response = client.get("/api/users/followers/")
 
             assert response.status_code == status.HTTP_200_OK
             follower_ids = [follower['id'] for follower in response.data['results']]
             assert user.id not in follower_ids
     else:
-        response = client.delete(f"/users/{author}/follow/")
+        response = client.delete(f"/api/users/{author}/follow/")
         assert response.status_code == status_code

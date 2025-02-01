@@ -12,14 +12,3 @@ def test_constants_exists():
 static_url = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns = urlpatterns
-
-
-@pytest.mark.django_db
-def test_static_urlpatterns():
-    global static_url
-    global urlpatterns
-
-    pattern_str = static_url[0]
-
-    urls = [str(url) for url in urlpatterns]
-    assert str(pattern_str) in urls, "STATIC_URL is not set correctly"

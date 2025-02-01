@@ -59,14 +59,14 @@ def test_logout(logout_data, mocker, fake_redis, request, tokens):
 
     # users-me get data
     if test_name == 'test_logout[valid_with_stored_tokens]':
-        url = '/users/me/'
+        url = '/api/users/me/'
         resp = client.get(url)
         assert resp.status_code == status_code
 
     # logout
-    resp = client.post('/users/logout/')
+    resp = client.post('/api/users/logout/')
     assert resp.status_code == status_code
     # users-me get data after logout
     if status_code == 200:
-        resp = client.get('/users/me/')
+        resp = client.get('/api/users/me/')
         assert resp.status_code == 401

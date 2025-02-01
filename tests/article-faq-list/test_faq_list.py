@@ -24,7 +24,7 @@ def test_faq_list_view(api_client):
     FAQFactory.create()
 
     client = api_client()
-    response = client.get('/articles/faqs/')
+    response = client.get('/api/articles/faqs/')
 
     assert response.status_code == status.HTTP_200_OK
 

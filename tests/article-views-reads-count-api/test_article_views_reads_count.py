@@ -37,16 +37,16 @@ def test_increment_reads_count(article_data, api_client, tokens):
     article = Article.objects.get(id=article_id)
     initial_reads_count = article.reads_count
 
-    response = client.post(f'/articles/{article_id}/read/')
+    response = client.post(f'/api/articles/{article_id}/read/')
 
-    assert response.status_code == status.HTTP_201_CREATED
+    assert response.status_code == status.HTTP_200_OK
     assert response.data['detail'] == "Maqolani o'qish soni ortdi."
 
     article.refresh_from_db()
     assert article.reads_count == initial_reads_count + 1
 
-    response = client.post(f'/articles/{article_id}/read/')
-    assert response.status_code == status.HTTP_201_CREATED
+    response = client.post(f'/api/articles/{article_id}/read/')
+    assert response.status_code == status.HTTP_200_OK
     article.refresh_from_db()
     assert article.reads_count == initial_reads_count + 2
 
@@ -63,7 +63,7 @@ def test_increment_reads_count_article_not_found(article_data, api_client, token
     client = api_client(token=access)
 
     non_existent_article_id = 99999007654
-    response = client.post(f'/articles/{non_existent_article_id}/read/')
+    response = client.post(f'/api/articles/{non_existent_article_id}/read/')
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
@@ -96,7 +96,7 @@ def test_view_article(article_data, api_client, tokens):
     article = Article.objects.get(id=article_id)
     initial_views_count = article.views_count
 
-    response = client.get(f'/articles/{article_id}/')
+    response = client.get(f'/api/articles/{article_id}/')
 
     assert response.status_code == status.HTTP_200_OK
     assert response.data['id'] == article_id

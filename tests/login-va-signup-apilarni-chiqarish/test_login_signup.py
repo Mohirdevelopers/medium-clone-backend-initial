@@ -191,7 +191,7 @@ def signup_data(request):
 def test_signup(signup_data, api_client):
     client = api_client()
     status_code, req_json = signup_data()
-    url = '/users/signup/'
+    url = '/api/users/signup/'
     resp = client.post(url, data=req_json, format='json')
     assert resp.status_code == status_code
     if status_code == status.HTTP_201_CREATED:
@@ -213,7 +213,7 @@ def test_signup(signup_data, api_client):
 
         # check access token
         client = api_client(token=resp_json['access'])
-        url = '/users/me/'
+        url = '/api/users/me/'
         resp = client.get(url)
         assert resp.status_code == status.HTTP_200_OK
 
@@ -296,7 +296,7 @@ def login_data(request, user_factory):
 )
 def test_login(login_data, api_client):
     status_code, req_json = login_data()
-    url = '/users/login/'
+    url = '/api/users/login/'
     resp = api_client().post(url, data=req_json)
     assert resp.status_code == status_code
     if status_code == status.HTTP_200_OK:
@@ -305,7 +305,7 @@ def test_login(login_data, api_client):
 
         # check access token
         client = api_client(token=resp_json['access'])
-        url = '/users/me/'
+        url = '/api/users/me/'
         resp = client.get(url)
         assert resp.status_code == status.HTTP_200_OK
 
@@ -347,7 +347,7 @@ def test_user_me(user_me_data, api_client):
     status_code, access = user_me_data()
 
     client = api_client(token=access)
-    url = '/users/me/'
+    url = '/api/users/me/'
     resp = client.get(url)
     assert resp.status_code == status_code
     if status_code == status.HTTP_200_OK:

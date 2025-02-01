@@ -55,7 +55,7 @@ def test_report_article(api_client, tokens, report_data, article_status, expecte
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.post(f'/articles/{article.id}/report/')
+    response = client.post(f'/api/articles/{article.id}/report/')
 
     assert response.status_code == expected_status
     print("response data", response.data['detail'])
@@ -67,7 +67,7 @@ def test_report_article(api_client, tokens, report_data, article_status, expecte
         pytest.fail("Response data is not in expected format")
 
     if article_status == "publish":
-        response = client.post(f'/articles/{article.id}/report/')
+        response = client.post(f'/api/articles/{article.id}/report/')
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
         if isinstance(response.data, dict):
@@ -88,22 +88,17 @@ def test_report_article_twice(api_client, tokens, report_data):
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.post(f'/articles/{article.id}/report/')
+    response = client.post(f'/api/articles/{article.id}/report/')
     assert response.status_code == status.HTTP_201_CREATED
     if isinstance(response.data, dict):
         assert response.data.get('detail') == "Shikoyat yuborildi."
-    elif isinstance(response.data, list):
-        assert response.data[0] == "Shikoyat yuborildi."
     else:
         pytest.fail("Response data is not in expected format")
 
-    response = client.post(f'/articles/{article.id}/report/')
+    response = client.post(f'/api/articles/{article.id}/report/')
 
     assert response.status_code == status.HTTP_400_BAD_REQUEST
-    if isinstance(response.data, dict):
-        assert response.data.get('detail') == "Ushbu maqola allaqachon shikoyat qilingan."
-    elif isinstance(response.data, list):
-        assert response.data[0] == "Ushbu maqola allaqachon shikoyat qilingan."
+    assert response.data['detail'] == "Ushbu maqola allaqachon shikoyat qilingan."
 
 
 @pytest.mark.django_db
@@ -115,22 +110,22 @@ def test_report_article_third(api_client, tokens, report_data, user_factory):
     user, article = report_data
     access, _ = tokens(user)
     client = api_client(token=access)
-    client.post(f'/articles/{article.id}/report/')
+    client.post(f'/api/articles/{article.id}/report/')
 
     user = user_factory.create()
     access, _ = tokens(user)
     client = api_client(token=access)
-    client.post(f'/articles/{article.id}/report/')
+    client.post(f'/api/articles/{article.id}/report/')
 
     user = user_factory.create()
     access, _ = tokens(user)
     client = api_client(token=access)
-    client.post(f'/articles/{article.id}/report/')
+    client.post(f'/api/articles/{article.id}/report/')
 
     user = user_factory.create()
     access, _ = tokens(user)
     client = api_client(token=access)
-    response = client.post(f'/articles/{article.id}/report/')
+    response = client.post(f'/api/articles/{article.id}/report/')
     print("data response", response.data)
 
     assert response.status_code == status.HTTP_200_OK
@@ -150,7 +145,7 @@ def test_report_unpublished_article(api_client, tokens, report_data):
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.post(f'/articles/{article.id}/report/')
+    response = client.post(f'/api/articles/{article.id}/report/')
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
     assert response.data['detail'] == "No Article matches the given query."
@@ -166,7 +161,7 @@ def test_report_non_existing_article(api_client, tokens, user_factory):
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.post('/articles/999999/report/')
+    response = client.post('/api/articles/999999/report/')
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
     assert response.data.get('detail') == "No Article matches the given query."

@@ -125,7 +125,7 @@ def change_password_data(request, user_factory, tokens):
 def test_change_password(change_password_data, api_client):
     status_code, user, access, data = change_password_data()
     client = api_client(token=access)
-    resp = client.put('/users/password/change/', data, format='json')
+    resp = client.put('/api/users/password/change/', data, format='json')
     assert resp.status_code == status_code
 
     if resp.status_code == status.HTTP_200_OK:
@@ -133,7 +133,7 @@ def test_change_password(change_password_data, api_client):
         assert user.check_password(data['new_password'])
 
         client = api_client()
-        login_url = '/users/login/'
+        login_url = '/api/users/login/'
         login_data = {
             'username': user.username,
             'password': data['new_password']

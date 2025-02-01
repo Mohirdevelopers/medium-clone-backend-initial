@@ -87,7 +87,7 @@ def test_forgot_password_view(forgot_password_data, api_client, mocker):
     mock_redis_conn = mocker.Mock()
     mocker.patch('users.services.OTPService.get_redis_conn', return_value=mock_redis_conn)
     client = api_client()
-    resp = client.post('/users/password/forgot/', data, format='json')
+    resp = client.post('/api/users/password/forgot/', data, format='json')
     assert resp.status_code == status_code
     if status_code == status.HTTP_200_OK:
         resp_json = resp.json()
@@ -100,7 +100,7 @@ def test_forgot_password_view(forgot_password_data, api_client, mocker):
             'users.services.SendEmailService.send_email',
             mock.Mock(side_effect=Exception('Error sending email.'))
         )
-        resp = client.post('/users/password/forgot/', data, format='json')
+        resp = client.post('/api/users/password/forgot/', data, format='json')
         assert resp.status_code == status.HTTP_400_BAD_REQUEST
         mock_redis_conn.delete.assert_called_once_with(key)
 
@@ -264,7 +264,7 @@ def test_forgot_password_verify_view(forgot_password_verify_data, api_client, mo
     mock_token_hash = make_password(token_urlsafe())
     mocker.patch('users.views.make_password', return_value=mock_token_hash)
     client = api_client()
-    resp = client.post(f'/users/password/forgot/verify/{otp_secret}/', data, format='json')
+    resp = client.post(f'/api/users/password/forgot/verify/{otp_secret}/', data, format='json')
     assert resp.status_code == status_code
     if resp.status_code == status.HTTP_200_OK:
         resp_json = resp.json()
@@ -383,7 +383,7 @@ def test_reset_password_view(reset_password_view_data, api_client, mocker):
     mock_redis_conn.get.return_value = email.encode() if email else None
 
     client = api_client()
-    resp = client.patch('/users/password/reset/', data, format='json')
+    resp = client.patch('/api/users/password/reset/', data, format='json')
 
     if resp.status_code != 400:
         mock_redis_conn.get.assert_called_once_with(data['token'])

@@ -73,7 +73,7 @@ def test_article_patch(article_patch_data, api_client, tokens):
     access, _ = tokens(user)
     client = api_client(token=access)
 
-    response = client.patch(f'/articles/{article_id}/', data=patch_data, format='multipart')
+    response = client.patch(f'/api/articles/{article_id}/', data=patch_data, format='multipart')
 
     assert response.status_code == status_code
 

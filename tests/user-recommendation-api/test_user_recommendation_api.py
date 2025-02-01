@@ -74,7 +74,7 @@ def test_articles(articles_data, api_client, tokens):
     articles, _, user = articles_data
     access, _ = tokens(user)
 
-    response = api_client(token=access).get('/articles/')
+    response = api_client(token=access).get('/api/articles/')
 
     assert response.status_code == status.HTTP_200_OK
     assert len(response.data['results']) == 5
@@ -98,17 +98,17 @@ def test_articles_more_recommendations(articles_data, api_client, tokens):
         "less_article_id": article_id
     }
 
-    response = client.post('/users/recommend/', data=data, format='json')
+    response = client.post('/api/users/recommend/', data=data, format='json')
     assert response.status_code == status.HTTP_204_NO_CONTENT
 
     data = {
         "more_article_id": article_id
     }
 
-    response = client.post('/users/recommend/', data=data, format='json')
+    response = client.post('/api/users/recommend/', data=data, format='json')
     assert response.status_code == status.HTTP_204_NO_CONTENT
 
-    response = client.get('/articles/?is_recommend=true')
+    response = client.get('/api/articles/?is_recommend=true')
     assert response.status_code == status.HTTP_200_OK
     assert response.data['results'][0]['topics'][0]['id'] == topic_id
 
@@ -131,16 +131,16 @@ def test_articles_less_recommendations(articles_data, api_client, tokens):
         "more_article_id": article_id
     }
 
-    more_response = client.post('/users/recommend/', data=data, format='json')
+    more_response = client.post('/api/users/recommend/', data=data, format='json')
     assert more_response.status_code == status.HTTP_204_NO_CONTENT
 
     data = {
         "less_article_id": article_id
     }
 
-    response = client.post('/users/recommend/', data=data, format='json')
+    response = client.post('/api/users/recommend/', data=data, format='json')
     assert response.status_code == status.HTTP_204_NO_CONTENT
 
-    response = client.get('/articles/?is_recommend=true')
+    response = client.get('/api/articles/?is_recommend=true')
     assert response.status_code == status.HTTP_200_OK
     assert response.data['count'] == 0
